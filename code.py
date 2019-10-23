@@ -3,17 +3,16 @@
 import web
 
 urls = (
-	'/', 'Hello'
+	'/', 'Home'
 )
 
-app = web.application(urls, globals())
-
-class Hello(object):
+class Home(object):
 	def __init__(self):
-		super(Hello, self).__init__()
+		super(Home, self).__init__()
 
 	def GET(self):
-		return 'Hello, THRAEX!'
+		return 'This is the home page!'
 
 if __name__ == '__main__':
+	app = web.application(urls, globals())
 	app.run()
