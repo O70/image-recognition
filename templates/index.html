@@ -1,4 +1,4 @@
-$def with (name)
+$def with ()
 
 <!DOCTYPE html>
 <html>
@@ -6,6 +6,13 @@ $def with (name)
 	<title>Image Recognition</title>
 </head>
 <body>
-	<em>Hello</em>, $name!
+	
+	<div>
+		<form action="upload" method="post">
+			<input type="text" name="name" placeholder="Please input name">
+			<button type="submit">Submit</button>
+		</form>
+	</div>
+
 </body>
 </html>
