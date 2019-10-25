@@ -12,10 +12,9 @@ class Process(object):
 	def __init__(self):
 		super(Process, self).__init__()
 
-	def run(self):
+	def run(self, image_path, target_path):
 		return_elements = ["input/input_data:0", "pred_sbbox/concat_2:0", "pred_mbbox/concat_2:0", "pred_lbbox/concat_2:0"]
 		pb_file         = "./static/yolov3_yanxin1000_1016.pb"
-		image_path      = "./static/img/sample.jpeg"
 		num_classes     = len(utils.read_class_names(cfg.YOLO.CLASSES))
 		input_size      = 608
 		graph           = tf.Graph()
@@ -42,5 +41,4 @@ class Process(object):
 		bboxes = utils.nms(bboxes, 0.45, method='nms')
 		image = utils.draw_bbox(original_image, bboxes)
 		image = Image.fromarray(image)
-		image.save(fp = './static/img/result.jpg')
-		# image.show()
+		image.save(fp = target_path)

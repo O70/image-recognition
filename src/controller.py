@@ -2,6 +2,7 @@
 
 import web
 # from process import Process
+from service import Service
 
 render = web.template.render('templates/')
 
@@ -17,16 +18,16 @@ class Upload(object):
 		super(Upload, self).__init__()
 		
 	def POST(self):
-		i = web.input()
-		print(i['name'])
-		return web.seeother('/')
-
+		data = web.input(file = {})
+		if 'file' in data:
+			file = data.file
+			Service().save(file.filename, file.file.read())
 
 # TODO: Remove
-class Show(object):
-	def __init__(self):
-		super(Show, self).__init__()
+# class Show(object):
+# 	def __init__(self):
+# 		super(Show, self).__init__()
 	
-	def GET(self):
-		# Process().run()
-		return render.index()
+# 	def GET(self):
+# 		# Process().run()
+# 		return render.index()

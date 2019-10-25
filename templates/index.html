@@ -5,30 +5,43 @@ $def with ()
 <head>
 	<title>Image Recognition</title>
 
-	<!-- <link rel="stylesheet" href="https://unpkg.com/element-ui@2.12.0/lib/theme-chalk/index.css"> -->
 	<link rel="stylesheet" href="static/components/element-ui/index.css">
 </head>
 <body>
 	
-	<div id="app">
-		<el-button @click="visible = true">Button</el-button>
-		<el-dialog :visible.sync="visible" title="Hello world">
-		  	<p>Try Element</p>
-		</el-dialog>
+	<div id="app-container">
+		<el-upload
+			class="upload-demo"
+			action="/upload"
+			:on-preview="handlePreview"
+			:on-remove="handleRemove"
+			:file-list="fileList"
+			:multiple="true"
+			list-type="picture">
+			<el-button size="small" type="primary">点击上传</el-button>
+		</el-upload>
 	</div>
 
 </body>
 
-	<!-- <script src="https://unpkg.com/vue/dist/vue.js"></script> -->
 	<script src="static/components/vue/vue.js"></script>
-	<!-- <script src="https://unpkg.com/element-ui@2.12.0/lib/index.js"></script> -->
 	<script src="static/components/element-ui/index.js"></script>
 	<script>
     new Vue({
-      el: '#app',
+      el: '#app-container',
       data: function() {
-        return { visible: false }
+        return {
+        	fileList: []
+        }
+      },
+      methods: {
+		handleRemove(file, fileList) {
+			console.log(file, fileList);
+		},
+		handlePreview(file) {
+			console.log(file);
+		}
       }
-    })
+    });
   </script>
 </html>
