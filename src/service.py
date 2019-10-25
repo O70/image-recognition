@@ -13,7 +13,7 @@ class Service(object):
 		super(Service, self).__init__()
 
 	def saveImage(self, filename, bytes):
-		dirpath = './static/repos/'
+		dirpath = 'static/repos/'
 		if not os.path.exists(dirpath):
 			os.mkdir(dirpath)
 
@@ -31,8 +31,10 @@ class Service(object):
 		metadata = {}
 		metadata['original_name'] = filename
 		metadata['final_name'] = final_name
-		# metadata['filepath'] = target_path
-		metadata['filepath'] = dirpath + saved_name
+		metadata['filepath'] = target_path
+
+		metadata['probability'] = round(np.random.rand(), 2)
+		metadata['category'] = round(np.random.rand(), 2)
 
 		return metadata
 

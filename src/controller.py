@@ -35,5 +35,16 @@ class Save(object):
 		super(Save, self).__init__()
 
 	def POST(self):
-		data = web.input()
-		print(data)		
+		# metadatas = web.webapi.rawinput().get('metadata')
+		metadatas = web.data()
+		# print(json.loads(metadatas))
+		print(json.loads(metadatas)['data'])
+		print(type(json.loads(metadatas)['data']))
+		print('**************')
+		dd = json.loads(json.loads(metadatas)['data'])
+		print(type(dd))
+		for x in dd:
+			print(x)
+		# print(json.loads(json.loads(metadatas)['data']))
+		# for md in json.loads(metadatas)['data']:
+		# 	print((md))

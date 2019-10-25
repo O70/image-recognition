@@ -75,59 +75,61 @@
 		<el-row>
 			<el-col>
 				<div style="text-align: right;margin-bottom: 10px;">
-					<el-button type="primary" icon="el-icon-upload" @click="submitFile">上传</el-button>
-					<el-button type="success" icon="el-icon-check" @click="">保存</el-button>
+					<el-button type="primary" icon="el-icon-upload" @click="uploadVisible = true">上传</el-button>
+					<el-button type="success" icon="el-icon-check" @click="saveData">保存</el-button>
 				</div>
-				<el-upload
+				<!-- <el-upload
 					ref="upload"
 					action="#"
 					list-type="picture-card"
 					:multiple="true"
 					:auto-upload="false"
-					:http-request="appendFile"
-					:on-preview="handlePictureCardPreview">
+					:http-request="appendFile">
 					<i class="el-icon-plus"></i>
-				</el-upload>
+				</el-upload> -->
 			</el-col>
 		</el-row>
 
 		<el-row>
 			<el-col>
-				<div v-for="md in metadatas" :key="md.final_name">
-					<el-image style="width: 200px; height: 200px" :src="md.filepath" :fit="fit" :preview-src-list="srcList" lazy></el-image>
+				<div v-for="(md, ind) in metadatas" :key="md.final_name + ind">
+					<el-row>
+						<el-col :span="3">
+							<el-image 
+								:src="md.filepath"
+								fit="cover"
+								lazy
+								style="width: 200px; height: 200px"/>
+						</el-col>
+						<el-col :span="6">
+							<!-- <el-input v-model="md.probability" clearable placeholder="请输入内容"></el-input>
+							<el-input v-model="md.category" clearable placeholder="请输入内容"></el-input> -->
+							<el-input v-model="md.probability" clearable placeholder="请输入概率">
+								<template slot="prepend">概率</template>
+							</el-input>
+							<el-input v-model="md.category" clearable placeholder="请输入类别">
+								<template slot="prepend">类别</template>
+							</el-input>
+						</el-col>
+					</el-row>
 				</div>
 			</el-col>
 		</el-row>
 
-		<!-- <el-card class="box-card">
-			<div slot="header" class="clearfix">
-				<span>上传图片</span>
-				<el-button style="float: right; padding: 3px 0" type="text">上传</el-button>
-			</div>
+		<el-dialog :visible.sync="uploadVisible" title="选择图片">
 			<el-upload
+				ref="upload"
 				action="#"
 				list-type="picture-card"
 				:multiple="true"
 				:auto-upload="false"
-				:on-preview="handlePictureCardPreview"
-				:on-remove="handleRemove">
+				:http-request="appendFile">
 				<i class="el-icon-plus"></i>
 			</el-upload>
-		</el-card>
-
-		<el-card class="box-card">
-			<div slot="header" class="clearfix">
-				<span>yu</span>
-				<el-button style="float: right; padding: 3px 0" type="text">上传</el-button>
-			</div>
-			<div v-for="o in 4" :key="o" class="text item">
-		    {{'列表内容 ' + o }}
-		  </div>
-		</el-card> -->
-
-		<el-dialog :visible.sync="previewVisible">
-			<img width="100%" :src="previewImageUrl">
 		</el-dialog>
+		<!-- <el-dialog :visible.sync="previewVisible">
+			<img width="100%" :src="previewImageUrl">
+		</el-dialog> -->
 	</div>
 
 </body>
@@ -141,11 +143,18 @@
 		el: '#app-container',
 		data: function() {
 			return {
-				previewImageUrl: '',
-				previewVisible: false,
+				// previewImageUrl: '',
+				// previewVisible: false,
+				uploadVisible: false,
 				formData: null,
-				metadatas: [{"original_name":"sublime.jpg","final_name":"20191025180423380216_final_sublime.jpg","filepath":"./static/repos/20191025180423380216_sublime.jpg"},{"original_name":"sample.jpeg","final_name":"20191025180423405119_final_sample.jpeg","filepath":"./static/repos/20191025180423405119_sample.jpeg"},{"original_name":"notes.png","final_name":"20191025180423485906_final_notes.png","filepath":"./static/repos/20191025180423485906_notes.png"}]
+				metadatas: [{"original_name":"sublime.jpg","final_name":"20191025180423380216_final_sublime.jpg","filepath":"static/repos/20191025180423380216_sublime.jpg"},{"original_name":"sample.jpeg","final_name":"20191025180423405119_final_sample.jpeg","filepath":"static/repos/20191025180423405119_sample.jpeg"},{"original_name":"notes.png","final_name":"20191025180423485906_final_notes.png","filepath":"static/repos/20191025180423485906_notes.png"},{"original_name":"sublime.jpg","final_name":"20191025180423380216_final_sublime.jpg","filepath":"static/repos/20191025180423380216_sublime.jpg"},{"original_name":"sample.jpeg","final_name":"20191025180423405119_final_sample.jpeg","filepath":"static/repos/20191025180423405119_sample.jpeg"},{"original_name":"notes.png","final_name":"20191025180423485906_final_notes.png","filepath":"static/repos/20191025180423485906_notes.png"},{"original_name":"notes.png","final_name":"20191025180423485906_final_notes.png","filepath":"static/repos/20191025180423485906_notes.png"}]
 			}
+		},
+		created() {
+			this.metadatas.forEach((it, ind) => {
+				Vue.set(it, 'probability', ind);
+				Vue.set(it, 'category', ind + 1);
+			})
 		},
 		methods: {
 			appendFile(file) {
@@ -167,14 +176,28 @@
 					console.error('upload error: ' + res);
 				})
 			},
+			saveData() {
+				// console.log(JSON.stringify(this.metadatas))
+				// let mds = new FormData();
+				// mds.append('metadatas', this.metadatas);
+				// this.metadatas.forEach(it => {
+				// 	mds.append('metadata', it);
+				// });
+				axios.post('/save', { data: JSON.stringify(this.metadatas) }).then(res => {
+					console.info(res)
+				}).catch(res => {
+					console.error('save error: ' + res);
+				})
+			}
 			// handleRemove(file, fileList) {
 			// 	// :on-remove="handleRemove"
 			// 	console.log(file, fileList);
 			// },
-			handlePictureCardPreview(file) {
-				this.previewImageUrl = file.url;
-				this.previewVisible = true;
-			}
+			// handlePictureCardPreview(file) {
+			// 	// :on-preview="handlePictureCardPreview"
+			// 	this.previewImageUrl = file.url;
+			// 	this.previewVisible = true;
+			// }
 		}
 	});
   </script>
