@@ -4,15 +4,31 @@ $def with ()
 <html>
 <head>
 	<title>Image Recognition</title>
+
+	<!-- <link rel="stylesheet" href="https://unpkg.com/element-ui@2.12.0/lib/theme-chalk/index.css"> -->
+	<link rel="stylesheet" href="static/components/element-ui/index.css">
 </head>
 <body>
 	
-	<div>
-		<form action="upload" method="post">
-			<input type="text" name="name" placeholder="Please input name">
-			<button type="submit">Submit</button>
-		</form>
+	<div id="app">
+		<el-button @click="visible = true">Button</el-button>
+		<el-dialog :visible.sync="visible" title="Hello world">
+		  	<p>Try Element</p>
+		</el-dialog>
 	</div>
 
 </body>
+
+	<!-- <script src="https://unpkg.com/vue/dist/vue.js"></script> -->
+	<script src="static/components/vue/vue.js"></script>
+	<!-- <script src="https://unpkg.com/element-ui@2.12.0/lib/index.js"></script> -->
+	<script src="static/components/element-ui/index.js"></script>
+	<script>
+    new Vue({
+      el: '#app',
+      data: function() {
+        return { visible: false }
+      }
+    })
+  </script>
 </html>
