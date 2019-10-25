@@ -27,7 +27,6 @@ class Process(object):
 
 		return_tensors = utils.read_pb_return_tensors(graph, pb_file, return_elements)
 
-
 		with tf.Session(graph=graph) as sess:
 		    pred_sbbox, pred_mbbox, pred_lbbox = sess.run(
 		        [return_tensors[1], return_tensors[2], return_tensors[3]],
@@ -42,3 +41,6 @@ class Process(object):
 		image = utils.draw_bbox(original_image, bboxes)
 		image = Image.fromarray(image)
 		image.save(fp = target_path)
+
+		# TODO: Mock probability and category
+		return { 'probability': round(np.random.rand(), 2), 'category': round(np.random.rand(), 2) }
