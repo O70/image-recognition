@@ -4,6 +4,7 @@ import os
 import datetime
 from PIL import Image
 from io import BytesIO
+from web import database
 
 from process import Process
 
@@ -12,7 +13,7 @@ class Service(object):
 		super(Service, self).__init__()
 
 	def saveImage(self, filename, bytes):
-		dirpath = 'repos/'
+		dirpath = './static/repos/'
 		if not os.path.exists(dirpath):
 			os.mkdir(dirpath)
 
@@ -26,12 +27,17 @@ class Service(object):
 		image = Image.open(BytesIO(bytes))
 		image.save(image_path)
 
-		metadata = Process().run(image_path, target_path)
+		# metadata = Process().run(image_path, target_path)
+		metadata = {}
 		metadata['original_name'] = filename
 		metadata['final_name'] = final_name
-		metadata['filepath'] = target_path
+		# metadata['filepath'] = target_path
+		metadata['filepath'] = dirpath + saved_name
 
 		return metadata
 
 	def saveMetadata(self):
-		pass
+		db = database(dbn='mysql', user='root', pw='mysql', db='riped-config')
+		datas = db.select('tbl_image_metadata')
+		print(datas)
+		return datas

@@ -9,6 +9,7 @@ $ pip install web.py==0.40
 $ pip install tensorflow==1.13.1
 $ pip install opencv-python
 $ pip install pillow
+$ pip install pymysql
 ```
 
 ## Run
