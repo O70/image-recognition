@@ -7,6 +7,7 @@ from io import BytesIO
 from web import database
 
 from process import Process
+import uuid
 
 class Service(object):
 	def __init__(self):
@@ -38,8 +39,9 @@ class Service(object):
 
 		return metadata
 
-	def saveMetadata(self):
-		db = database(dbn='mysql', user='root', pw='mysql', db='riped-config')
-		datas = db.select('tbl_image_metadata')
-		print(datas)
-		return datas
+	def saveMetadata(self, metadatas):
+		for md in metadatas:
+			md['id'] = str(uuid.uuid1())
+
+		db = database(dbn = 'mysql', user = 'root', pw = 'mysql', db = 'riped-config')
+		res = db.multiple_insert('tbl_image_metadata', values = metadatas)

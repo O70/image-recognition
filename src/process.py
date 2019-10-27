@@ -8,6 +8,9 @@ from PIL import Image
 
 from core.config import cfg
 
+# TODO: Remove
+import random
+
 class Process(object):
 	def __init__(self):
 		super(Process, self).__init__()
@@ -42,5 +45,7 @@ class Process(object):
 		image = Image.fromarray(image)
 		image.save(fp = target_path)
 
+		# # TODO: Remove
 		# TODO: Mock probability and category
-		return { 'probability': round(np.random.rand(), 2), 'category': round(np.random.rand(), 2) }
+		# return { 'probability': round(np.random.rand(), 2), 'category': round(np.random.rand(), 2) }
+		return { 'probability': round(np.random.rand(), 2), 'category': random.randint(0, 4) }

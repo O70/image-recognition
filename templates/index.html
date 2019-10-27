@@ -107,9 +107,16 @@
 							<el-input v-model="md.probability" clearable placeholder="请输入概率">
 								<template slot="prepend">概率</template>
 							</el-input>
-							<el-input v-model="md.category" clearable placeholder="请输入类别">
+							<!-- <el-input v-model="md.category" clearable placeholder="请输入类别">
 								<template slot="prepend">类别</template>
-							</el-input>
+							</el-input> -->
+							<el-select v-model="md.category" placeholder="请选择类别">
+								<el-option
+									v-for="(it, ind) in categorys"
+									:key="it"
+									:label="it"
+									:value="ind"/>
+							</el-select>
 						</el-col>
 					</el-row>
 				</div>
@@ -145,6 +152,14 @@
 			return {
 				// previewImageUrl: '',
 				// previewVisible: false,
+				// categorys: [
+				// 	{ value: 0, label: 'W' },
+				// 	{ value: 1, label: 'WP' },
+				// 	{ value: 2, label: 'P' },
+				// 	{ value: 3, label: 'S' },
+				// 	{ value: 4, label: 'rubbled' }
+				// ],
+				categorys: ['W', 'WP', 'P', 'S', 'rubbled'],
 				uploadVisible: false,
 				formData: null,
 				metadatas: [{"original_name":"sublime.jpg","final_name":"20191025180423380216_final_sublime.jpg","filepath":"static/repos/20191025180423380216_sublime.jpg"},{"original_name":"sample.jpeg","final_name":"20191025180423405119_final_sample.jpeg","filepath":"static/repos/20191025180423405119_sample.jpeg"},{"original_name":"notes.png","final_name":"20191025180423485906_final_notes.png","filepath":"static/repos/20191025180423485906_notes.png"},{"original_name":"sublime.jpg","final_name":"20191025180423380216_final_sublime.jpg","filepath":"static/repos/20191025180423380216_sublime.jpg"},{"original_name":"sample.jpeg","final_name":"20191025180423405119_final_sample.jpeg","filepath":"static/repos/20191025180423405119_sample.jpeg"},{"original_name":"notes.png","final_name":"20191025180423485906_final_notes.png","filepath":"static/repos/20191025180423485906_notes.png"},{"original_name":"notes.png","final_name":"20191025180423485906_final_notes.png","filepath":"static/repos/20191025180423485906_notes.png"}]
@@ -152,8 +167,8 @@
 		},
 		created() {
 			this.metadatas.forEach((it, ind) => {
-				Vue.set(it, 'probability', ind);
-				Vue.set(it, 'category', ind + 1);
+				Vue.set(it, 'probability', Math.random());
+				Vue.set(it, 'category', Math.floor(Math.random() * 5));
 			})
 		},
 		methods: {
