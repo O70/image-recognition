@@ -27,9 +27,15 @@ class Upload(object):
 		metadatas = []
 		for f in files:
 			metadatas.append(Service().saveImage(f.filename, f.file.read()))
-		print(metadatas)
 
 		return json.dumps(metadatas)
+
+class List(object):
+	def __init__(self):
+		super(List, self).__init__()
+
+	def GET(self):
+		return json.dumps(Service().list())
 
 class Save(object):
 	def __init__(self):
@@ -37,4 +43,4 @@ class Save(object):
 
 	def POST(self):
 		metadatas = web.data()
-		Service().saveMetadata(json.loads(json.loads(metadatas)['data']))
+		Service().save(json.loads(json.loads(metadatas)['data']))

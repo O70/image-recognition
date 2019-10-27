@@ -33,3 +33,13 @@ create table tbl_image_metadata (
     create_date datetime
 );
 ```
+
+## TODO
+
+- TODO: Remove
+- `rm -rf static/img`
+- `rm src/test.py`
+- 304 Not Modified
+- RuntimeError('generator raised StopIteration') 
+- XML Parsing Error: syntax error
+- remove https://unpkg.com

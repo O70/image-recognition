@@ -35,13 +35,21 @@
 								:src="md.filepath"
 								fit="cover"
 								lazy
+								:preview-src-list="previewSrc"
 								style="width: 200px; height: 200px"/>
 						</el-col>
 						<el-col :span="6">
-							<el-input v-model="md.probability" clearable placeholder="请输入概率">
+							<el-input 
+								v-model="md.probability" 
+								clearable
+								style="width: 200px;"
+								placeholder="请输入概率">
 								<template slot="prepend">概率</template>
 							</el-input>
-							<el-select v-model="md.category" placeholder="请选择类别">
+							<el-select 
+								v-model="md.category"
+								style="width: 200px;"
+								placeholder="请选择类别">
 								<el-option
 									v-for="(it, ind) in categorys"
 									:key="it"
@@ -88,13 +96,22 @@
 				uploadVisible: false,
 				loading: false,
 				formData: null,
-				metadatas: []
+				metadatas: [],
+				previewSrc: []
 			}
 		},
 		computed: {
 			disableSave() {
 				return this.metadatas.length === 0
 			}
+		},
+		created() {
+			axios.get('/list').then(({ data = [] }) => {
+				this.metadatas = this.metadatas.concat(data);
+				this.metadatas.forEach(it => this.previewSrc.push(it.filepath));
+			}).catch(res => {
+				console.error('got error: ' + res);
+			});
 		},
 		methods: {
 			appendFile(file) {
@@ -109,11 +126,9 @@
 				axios.post('/upload', this.formData, {
 					headers: { 'Content-Type': 'multipart/form-data' }
 				}).then(({ data = [] }) => {
-					console.info(JSON.stringify(data))
-					// console.info(res.data)
-					// console.info(typeof res.data)
-					// console.info(JSON.parse(res.data))
-					this.metadatas = data;
+					this.metadatas = this.metadatas.concat(data);
+					this.metadatas.forEach(it => this.previewSrc.push(it.filepath));
+					this.\$refs.upload.clearFiles();
 					this.uploadVisible = false;
 					this.loading = false;
 				}).catch(res => {
@@ -122,12 +137,6 @@
 				});
 			},
 			saveData() {
-				// console.log(JSON.stringify(this.metadatas))
-				// let mds = new FormData();
-				// mds.append('metadatas', this.metadatas);
-				// this.metadatas.forEach(it => {
-				// 	mds.append('metadata', it);
-				// });
 				this.loading = true;
 				axios.post('/save', { data: JSON.stringify(this.metadatas) }).then(res => {
 					console.info(res)
@@ -137,15 +146,6 @@
 					this.loading = false;
 				});
 			}
-			// handleRemove(file, fileList) {
-			// 	// :on-remove="handleRemove"
-			// 	console.log(file, fileList);
-			// },
-			// handlePictureCardPreview(file) {
-			// 	// :on-preview="handlePictureCardPreview"
-			// 	this.previewImageUrl = file.url;
-			// 	this.previewVisible = true;
-			// }
 		}
 	});
   </script>

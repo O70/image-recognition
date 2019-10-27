@@ -35,10 +35,22 @@ class Service(object):
 
 		return metadata
 
-	def saveMetadata(self, metadatas):
+	def list(self):
+		db = database(dbn = 'mysql', user = 'root', pw = 'mysql', db = 'riped-config')
+		rs = db.select('tbl_image_metadata', order = 'create_date desc')
+
+		result = []
+		for x in rs:
+			x['create_date'] = x.create_date.strftime('%Y-%m-%d %H:%M:%S')
+			result.append(x)
+
+		return result
+
+	def save(self, metadatas):
+		curDate = datetime.datetime.now()
 		for md in metadatas:
 			md['id'] = str(uuid.uuid1())
-			md['create_date'] = datetime.datetime.now()
+			md['create_date'] = curDate
 
 		db = database(dbn = 'mysql', user = 'root', pw = 'mysql', db = 'riped-config')
 		res = db.multiple_insert('tbl_image_metadata', values = metadatas)
