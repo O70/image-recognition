@@ -27,6 +27,7 @@ class Upload(object):
 		metadatas = []
 		for f in files:
 			metadatas.append(Service().saveImage(f.filename, f.file.read()))
+		print(metadatas)
 
 		return json.dumps(metadatas)
 

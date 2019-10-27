@@ -4,7 +4,6 @@ import web
 
 urls = (
 	'/', 'controller.Home',
-	# '/', 'controller.Show',
 	'/upload', 'controller.Upload',
 	'/save', 'controller.Save'
 )

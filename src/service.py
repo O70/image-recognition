@@ -28,14 +28,10 @@ class Service(object):
 		image = Image.open(BytesIO(bytes))
 		image.save(image_path)
 
-		# metadata = Process().run(image_path, target_path)
-		metadata = {}
+		metadata = Process().run(image_path, target_path)
 		metadata['original_name'] = filename
 		metadata['final_name'] = final_name
 		metadata['filepath'] = target_path
-
-		metadata['probability'] = round(np.random.rand(), 2)
-		metadata['category'] = round(np.random.rand(), 2)
 
 		return metadata
 
