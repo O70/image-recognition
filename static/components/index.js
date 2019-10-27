@@ -1,18 +1,29 @@
 new Vue({
 	el: '#app-container',
 	data: function() {
+		const cols = 6;
 		return {
 			categorys: ['W', 'WP', 'P', 'S', 'rubbled'],
 			uploadVisible: false,
 			disableUpload: true,
 			loading: false,
 			formData: null,
-			metadatas: []
+			metadatas: [],
+			grids: {
+				rows: 0, 
+				cols,
+				span: 24 /cols
+			}
 		}
 	},
 	computed: {
 		disableSave() {
 			return this.metadatas.length === 0
+		}
+	},
+	watch: {
+		metadatas() {
+			this.grids.rows = Math.ceil(this.metadatas.length / this.grids.cols);
 		}
 	},
 	created() {
@@ -23,6 +34,12 @@ new Vue({
 		});
 	},
 	methods: {
+		getItem(r, c) {
+			return this.metadatas[r * this.grids.cols + c];
+		},
+		openHistory() {
+            window.open('/', '_blank');
+		},
 		appendFile(file) {
 			this.formData.append('file', file.file);
 		},

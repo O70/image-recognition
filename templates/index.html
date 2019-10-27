@@ -5,6 +5,17 @@
 
 	<!-- <link rel="stylesheet" href="static/components/element-ui/index.css"> -->
 	<link rel="stylesheet" href="https://unpkg.com/element-ui@2.12.0/lib/theme-chalk/index.css">
+	<style type="text/css">
+	.clearfix:before,
+	.clearfix:after {
+		display: table;
+		content: "";
+	}
+
+	.clearfix:after {
+		clear: both
+	}
+	</style>
 </head>
 <body>
 	
@@ -12,6 +23,10 @@
 		<el-row>
 			<el-col>
 				<div style="text-align: right;margin-bottom: 10px;">
+					<el-button 
+						type="info" 
+						icon="el-icon-view" 
+						@click="openHistory">历史</el-button>
 					<el-button 
 						type="primary" 
 						icon="el-icon-upload" 
@@ -26,39 +41,29 @@
 			</el-col>
 		</el-row>
 
-		<el-row>
-			<el-col>
-				<div v-for="(md, ind) in metadatas" :key="md.final_name + ind">
-					<el-row>
-						<el-col :span="3">
-							<el-image 
-								:src="md.filepath"
-								fit="cover"
-								lazy
-								:preview-src-list="[md.filepath]"
-								style="width: 200px; height: 200px"/>
-						</el-col>
-						<el-col :span="6">
-							<el-input 
-								v-model="md.probability" 
-								clearable
-								style="width: 200px;"
-								placeholder="请输入概率">
-								<template slot="prepend">概率</template>
-							</el-input>
-							<el-select 
-								v-model="md.category"
-								style="width: 200px;"
-								placeholder="请选择类别">
-								<el-option
-									v-for="(it, ind) in categorys"
-									:key="it"
-									:label="it"
-									:value="ind"/>
-							</el-select>
-						</el-col>
-					</el-row>
-				</div>
+		<el-row 
+			v-for="(rv, rind) in grids.rows" 
+			:key="rv" 
+			:gutter="5" 
+			style="margin-bottom: 5px;">
+			<el-col v-for="(cv, cind) in grids.cols" :key="rv + cv + ''" :span="grids.span">
+				<el-card 
+					v-if="rind * grids.cols + cind < metadatas.length" 
+					:body-style="{ padding: '0px' }">
+					<el-image 
+						:src="getItem(rind, cind).filepath"
+						fit="cover"
+						lazy
+						:preview-src-list="[getItem(rind, cind).filepath]"
+						style="width: 300px; height: 300px; border: 3px solid green; border-radius: 5px;"></el-image>
+					<div style="padding: 0px;">
+				        <span>image </span>
+				        <div class="bottom clearfix">
+				          <time class="time">12</time>
+				          <el-button type="text" class="button">操作按钮</el-button>
+				        </div>
+				      </div>
+				</el-card>
 			</el-col>
 		</el-row>
 
