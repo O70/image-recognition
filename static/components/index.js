@@ -37,8 +37,8 @@ new Vue({
 		getItem(r, c) {
 			return this.metadatas[r * this.grids.cols + c];
 		},
-		openHistory() {
-            window.open('/', '_blank');
+		openBrowse() {
+            window.open('/browse', '_blank');
 		},
 		appendFile(file) {
 			this.formData.append('file', file.file);

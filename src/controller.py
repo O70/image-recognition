@@ -30,6 +30,13 @@ class Upload(object):
 
 		return json.dumps(metadatas)
 
+class Browse(object):
+	def __init__(self):
+		super(Browse, self).__init__()
+		
+	def GET(self):
+		return render.browse()
+
 class List(object):
 	def __init__(self):
 		super(List, self).__init__()

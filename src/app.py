@@ -6,7 +6,8 @@ urls = (
 	'/', 'controller.Home',
 	'/upload', 'controller.Upload',
 	'/list', 'controller.List',
-	'/save', 'controller.Save'
+	'/save', 'controller.Save',
+	'/browse', 'controller.Browse'
 )
 
 if __name__ == '__main__':
