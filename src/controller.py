@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-import web
-import json
+import web, json
 from service import Service
 
 render = web.template.render('templates/')

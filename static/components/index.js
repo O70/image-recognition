@@ -26,13 +26,13 @@ new Vue({
 			this.grids.rows = Math.ceil(this.metadatas.length / this.grids.cols);
 		}
 	},
-	created() {
-		axios.get('/list').then(({ data = [] }) => {
-			this.metadatas = [...data, ...this.metadatas];
-		}).catch(res => {
-			console.error('got error: ' + res);
-		});
-	},
+	// created() {
+	// 	axios.get('/list').then(({ data = [] }) => {
+	// 		this.metadatas = [...data, ...this.metadatas];
+	// 	}).catch(res => {
+	// 		console.error('got error: ' + res);
+	// 	});
+	// },
 	methods: {
 		getItem(r, c) {
 			return this.metadatas[r * this.grids.cols + c];
@@ -75,7 +75,6 @@ new Vue({
 		saveData() {
 			this.loading = true;
 			axios.post('/save', { data: JSON.stringify(this.metadatas) }).then(res => {
-				console.info(res)
 				this.loading = false;
 			}).catch(res => {
 				console.error('save error: ' + res);
