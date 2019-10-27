@@ -37,6 +37,10 @@ new Vue({
 		getItem(r, c) {
 			return this.metadatas[r * this.grids.cols + c];
 		},
+		handleInput(val, obj) {
+			const nv = Number.parseFloat(val);
+			Vue.set(obj, 'probability', Number.isNaN(nv) ? 0 : nv);
+		},
 		openBrowse() {
             window.open('/browse', '_blank');
 		},
