@@ -38,6 +38,7 @@ class Service(object):
 	def saveMetadata(self, metadatas):
 		for md in metadatas:
 			md['id'] = str(uuid.uuid1())
+			md['create_date'] = datetime.datetime.now()
 
 		db = database(dbn = 'mysql', user = 'root', pw = 'mysql', db = 'riped-config')
 		res = db.multiple_insert('tbl_image_metadata', values = metadatas)
