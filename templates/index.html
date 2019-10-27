@@ -35,7 +35,7 @@
 								:src="md.filepath"
 								fit="cover"
 								lazy
-								:preview-src-list="previewSrc"
+								:preview-src-list="[md.filepath]"
 								style="width: 200px; height: 200px"/>
 						</el-col>
 						<el-col :span="6">
@@ -69,13 +69,16 @@
 				list-type="picture-card"
 				:multiple="true"
 				:auto-upload="false"
+				:on-change="handleChange"
+				:on-remove="handleRemove"
 				:http-request="appendFile">
 				<i class="el-icon-plus"></i>
 			</el-upload>
 			<span slot="footer" class="dialog-footer">
 				<el-button @click="uploadVisible = false">取 消</el-button>
 				<el-button type="primary" 
-					@click="submitFile" 
+					@click="submitFile"
+					:disabled="disableUpload"
 					v-loading.fullscreen.lock="loading">确 定</el-button>
 			</span>
 		</el-dialog>
@@ -87,66 +90,5 @@
 	<!-- <script src="static/components/element-ui/index.js"></script> -->
 	<script src="https://unpkg.com/element-ui@2.12.0/lib/index.js"></script>
 	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-	<script>
-	new Vue({
-		el: '#app-container',
-		data: function() {
-			return {
-				categorys: ['W', 'WP', 'P', 'S', 'rubbled'],
-				uploadVisible: false,
-				loading: false,
-				formData: null,
-				metadatas: [],
-				previewSrc: []
-			}
-		},
-		computed: {
-			disableSave() {
-				return this.metadatas.length === 0
-			}
-		},
-		created() {
-			axios.get('/list').then(({ data = [] }) => {
-				this.metadatas = this.metadatas.concat(data);
-				this.metadatas.forEach(it => this.previewSrc.push(it.filepath));
-			}).catch(res => {
-				console.error('got error: ' + res);
-			});
-		},
-		methods: {
-			appendFile(file) {
-				this.formData.append('file', file.file);
-			},
-			submitFile() {
-				this.loading = true;
-
-				this.formData = new FormData();
-				this.\$refs.upload.submit();
-
-				axios.post('/upload', this.formData, {
-					headers: { 'Content-Type': 'multipart/form-data' }
-				}).then(({ data = [] }) => {
-					this.metadatas = this.metadatas.concat(data);
-					this.metadatas.forEach(it => this.previewSrc.push(it.filepath));
-					this.\$refs.upload.clearFiles();
-					this.uploadVisible = false;
-					this.loading = false;
-				}).catch(res => {
-					console.error('upload error: ' + res);
-					this.loading = false;
-				});
-			},
-			saveData() {
-				this.loading = true;
-				axios.post('/save', { data: JSON.stringify(this.metadatas) }).then(res => {
-					console.info(res)
-					this.loading = false;
-				}).catch(res => {
-					console.error('save error: ' + res);
-					this.loading = false;
-				});
-			}
-		}
-	});
-  </script>
+	<script src="static/components/index.js"></script>
 </html>

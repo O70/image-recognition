@@ -43,3 +43,4 @@ create table tbl_image_metadata (
 - RuntimeError('generator raised StopIteration') 
 - XML Parsing Error: syntax error
 - remove https://unpkg.com
+- TypeError: WSGI response header value 469 is not of type str.
