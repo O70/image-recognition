@@ -49,20 +49,34 @@
 			<el-col v-for="(cv, cind) in grids.cols" :key="rv + cv + ''" :span="grids.span">
 				<el-card 
 					v-if="rind * grids.cols + cind < metadatas.length" 
-					:body-style="{ padding: '0px' }">
+					:body-style="{ padding: '5px' }">
 					<el-image 
 						:src="getItem(rind, cind).filepath"
 						fit="cover"
 						lazy
 						:preview-src-list="[getItem(rind, cind).filepath]"
-						style="width: 300px; height: 300px; border: 3px solid green; border-radius: 5px;"></el-image>
-					<div style="padding: 0px;">
-				        <span>image </span>
-				        <div class="bottom clearfix">
-				          <time class="time">12</time>
-				          <el-button type="text" class="button">操作按钮</el-button>
-				        </div>
-				      </div>
+						style="width: 300px; height: 300px; border: 2px solid green; border-radius: 5px;"></el-image>
+					<el-row :gutter="5">
+						<el-col :span="16">
+							<el-input 
+								v-model="getItem(rind, cind).probability" 
+								clearable
+								placeholder="请输入概率">
+								<template slot="prepend">概率</template>
+							</el-input>
+						</el-col>
+						<el-col :span="8">
+							<el-select 
+								v-model="getItem(rind, cind).category"
+								placeholder="请选择类别">
+								<el-option
+									v-for="(it, ind) in categorys"
+									:key="it"
+									:label="it"
+									:value="ind"/>
+							</el-select>
+						</el-col>
+					</el-row>
 				</el-card>
 			</el-col>
 		</el-row>
