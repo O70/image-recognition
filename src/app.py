@@ -4,10 +4,10 @@ import web
 
 urls = (
 	'/', 'controller.Home',
+	'/browse', 'controller.Browse',
 	'/upload', 'controller.Upload',
 	'/list', 'controller.List',
-	'/save', 'controller.Save',
-	'/browse', 'controller.Browse'
+	'/save', 'controller.Save'
 )
 
 if __name__ == '__main__':

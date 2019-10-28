@@ -1,51 +1,21 @@
 # -*- coding: utf-8 -*-
 
-import cv2
-import numpy as np
-import core.utils as utils
-import tensorflow as tf
-from PIL import Image
-
-from core.config import cfg
-
-# TODO: Remove
 import random
 
 class Process(object):
+	"""Use models to process images"""
 	def __init__(self):
 		super(Process, self).__init__()
 
-	def run(self, image_path, target_path):
-		return_elements = ["input/input_data:0", "pred_sbbox/concat_2:0", "pred_mbbox/concat_2:0", "pred_lbbox/concat_2:0"]
-		pb_file         = "./static/yolov3_yanxin1000_1016.pb"
-		num_classes     = len(utils.read_class_names(cfg.YOLO.CLASSES))
-		input_size      = 608
-		graph           = tf.Graph()
+	def run(self, imgpath):
+		print('Start processing images: ' + imgpath)
 
-		original_image = cv2.imread(image_path)
-		original_image = cv2.cvtColor(original_image, cv2.COLOR_BGR2RGB)
-		original_image_size = original_image.shape[:2]
-		image_data = utils.image_preporcess(np.copy(original_image), [input_size, input_size])
-		image_data = image_data[np.newaxis, ...]
+		preds = []
+		while len(preds) < 3:
+			prob = round(random.random(), 6)
+			preds.append({
+				'predict': prob,
+				'category': random.randint(0, 35)
+			})
 
-		return_tensors = utils.read_pb_return_tensors(graph, pb_file, return_elements)
-
-		with tf.Session(graph=graph) as sess:
-		    pred_sbbox, pred_mbbox, pred_lbbox = sess.run(
-		        [return_tensors[1], return_tensors[2], return_tensors[3]],
-		                feed_dict={ return_tensors[0]: image_data})
-
-		pred_bbox = np.concatenate([np.reshape(pred_sbbox, (-1, 5 + num_classes)),
-		                            np.reshape(pred_mbbox, (-1, 5 + num_classes)),
-		                            np.reshape(pred_lbbox, (-1, 5 + num_classes))], axis=0)
-
-		bboxes = utils.postprocess_boxes(pred_bbox, original_image_size, input_size, 0.3)
-		bboxes = utils.nms(bboxes, 0.45, method='nms')
-		image = utils.draw_bbox(original_image, bboxes)
-		image = Image.fromarray(image)
-		image.save(fp = target_path)
-
-		# # TODO: Remove
-		# TODO: Mock probability and category
-		# return { 'probability': round(np.random.rand(), 2), 'category': round(np.random.rand(), 2) }
-		return { 'probability': round(np.random.rand(), 2), 'category': random.randint(0, 4) }
+		return sorted(preds, key = lambda x:x['predict'], reverse = True)
