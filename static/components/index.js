@@ -8,7 +8,8 @@ new Vue({
 	methods: {
 		handleSuccess(res, file, fileList) {
 			console.log(res);
-			console.log(file, fileList);
+			console.log(typeof res);
+			// console.log(file, fileList);
 		}
 	}
 });

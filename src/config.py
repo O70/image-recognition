@@ -286,4 +286,4 @@ def getSubDir(val):
     for pl in LABELS:
         for l in pl['children']:
             if l['value'] == val:
-                return pl['label'] + '/' + l['label']
+                return pl['label'] + '/' + l['label'] + '/'

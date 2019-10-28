@@ -39,7 +39,7 @@ class Service(object):
 		tmpFilepath = tmpDirpath + newname
 		Image.open(BytesIO(bytes)).save(tmpFilepath)
 
-		result = { 'filepath': tmpFilepath }
+		metadata = { 'id': None, 'filepath': tmpFilepath }
 
 		predicts = Process().run(tmpFilepath)
 
@@ -51,17 +51,19 @@ class Service(object):
 			filepath = dirpath + newname
 			shutil.move(tmpFilepath, filepath)
 
-			result['id'] = str(uuid.uuid1())
-			result['filename'] = newname
-			result['filepath'] = filepath
-			result['create_date'] = datetime.datetime.now()
+			metadata['id'] = str(uuid.uuid1())
+			metadata['filename'] = newname
+			metadata['filepath'] = filepath
+			metadata['create_date'] = datetime.datetime.now()
 
 			db = database(dbn = JDBCS['dbn'], user = JDBCS['user'], pw = JDBCS['pw'], db = JDBCS['db'])
-			db.insert(table_name, **result)
+			db.insert(table_name, **metadata)
 
-			result['predicts'] = predicts
-
-		return result
+		return {
+			'id': metadata['id'],
+			'filepath': metadata['filepath'],
+			'predicts': predicts
+		}
 
 	def update(self, metadatas):
 		pass
