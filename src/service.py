@@ -16,13 +16,15 @@ def mkdirs(dirpath):
 	if not os.path.exists(dirpath):
 		os.makedirs(dirpath)
 
+def getDB():
+	return database(dbn = JDBCS['dbn'], user = JDBCS['user'], pw = JDBCS['pw'], db = JDBCS['db'])
+
 class Service(object):
 	def __init__(self):
 		super(Service, self).__init__()
 
 	def list(self):
-		db = database(dbn = JDBCS['dbn'], user = JDBCS['user'], pw = JDBCS['pw'], db = JDBCS['db'])
-		rs = db.select(table_name, order = 'create_date desc, final_name')
+		rs = getDB().select(table_name, order = 'create_date desc, final_name')
 
 		result = []
 		for x in rs:
@@ -56,8 +58,7 @@ class Service(object):
 			metadata['filepath'] = filepath
 			metadata['create_date'] = datetime.datetime.now()
 
-			db = database(dbn = JDBCS['dbn'], user = JDBCS['user'], pw = JDBCS['pw'], db = JDBCS['db'])
-			db.insert(table_name, **metadata)
+			getDB().insert(table_name, **metadata)
 
 		return {
 			'id': metadata['id'],
@@ -65,51 +66,7 @@ class Service(object):
 			'predicts': predicts
 		}
 
-	def update(self, metadatas):
-		pass
-
-	def saveImage(self, filename, bytes):
-		dirpath = 'static/tmp/'
-		if not os.path.exists(dirpath):
-			os.mkdir(dirpath)
-
-		prefix = datetime.datetime.now().strftime('%Y%m%d%H%M%S%f_')
-		saved_name = prefix + filename
-		final_name = prefix + 'final_' + filename
-
-		image_path = dirpath + saved_name
-		target_path = dirpath + final_name
-
-		image = Image.open(BytesIO(bytes))
-		image.save(image_path)
-
-		metadata = Process().run(image_path, target_path)
-		metadata['original_name'] = filename
-		metadata['final_name'] = final_name
-		metadata['filepath'] = target_path
-
-		return metadata
-
-	def saveMetadata(self, metadatas):
-		dirpath = 'static/repos/'
-		if not os.path.exists(dirpath):
-			os.mkdir(dirpath)
-
-		curDate = datetime.datetime.now()
-
-		for md in metadatas:
-			md['id'] = str(uuid.uuid1())
-			md['create_date'] = curDate
-
-			npath = dirpath + md['final_name']
-			if os.path.exists(md['filepath']):
-				shutil.move(md['filepath'], npath)
-
-			ori_img = md['filepath'].replace('final_', '')
-			if os.path.exists(ori_img):
-				shutil.move(ori_img, ori_img.replace('/tmp/', '/repos/'))
-
-			md['filepath'] = npath
-
-		db = database(dbn = JDBCS['dbn'], user = JDBCS['user'], pw = JDBCS['pw'], db = JDBCS['db'])
-		res = db.multiple_insert(table_name, values = metadatas)
+	def update(self, metadata):
+		getDB().update(table_name, 
+			where = "id = '" + metadata['id'] + "'", 
+			category = str(metadata['category']))

@@ -12,9 +12,9 @@ class Process(object):
 
 		preds = []
 		while len(preds) < 3:
-			prob = round(random.random(), 6)
+			pred = round(random.random(), 6)
 			preds.append({
-				'predict': prob,
+				'predict': pred,
 				'category': random.randint(0, 35)
 			})
 

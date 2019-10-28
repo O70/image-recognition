@@ -7,7 +7,7 @@ urls = (
 	'/browse', 'controller.Browse',
 	'/upload', 'controller.Upload',
 	'/list', 'controller.List',
-	'/save', 'controller.Save'
+	'/update', 'controller.Update'
 )
 
 if __name__ == '__main__':

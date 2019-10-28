@@ -25,11 +25,6 @@ class Upload(object):
 	def __init__(self):
 		super(Upload, self).__init__()
 		
-	def GET(self):
-		web.header('Content-Type', content_type)
-		r = { 'id': 'sdf', 'name': 'gui' }
-		return json.dumps(r)
-
 	def POST(self):
 		web.header('Content-Type', content_type)
 		data = web.input(file = {})
@@ -46,10 +41,13 @@ class List(object):
 
 		return json.dumps(Service().list())
 
-class Save(object):
+class Update(object):
 	def __init__(self):
-		super(Save, self).__init__()
+		super(Update, self).__init__()
 
 	def POST(self):
-		metadatas = web.data()
-		Service().save(json.loads(json.loads(metadatas)['data']))
+		Service().update(json.loads(web.data()))
+
+		web.header('Content-Type', content_type)
+
+		return json.dumps({ 'data': True })

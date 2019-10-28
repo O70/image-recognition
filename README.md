@@ -42,8 +42,6 @@ $ git push --force origin master
 - Image size: x*y
 - 304 Not Modified
 - RuntimeError('generator raised StopIteration') 
-- XML Parsing Error: syntax error
-- XML Parsing Error: not well-formed
 - remove https://unpkg.com
 - TypeError: WSGI response header value 469 is not of type str.
 - "HTTP/1.1 GET /service-worker.js" - 404 Not Found
