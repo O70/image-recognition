@@ -28,7 +28,7 @@ create table tbl_image_metadata (
     original_name varchar(64),
     final_name varchar(64),
     filepath varchar(128),
-    probability double(8, 2),
+    probability double(12, 6),
     category int,
     create_date datetime
 );
@@ -45,3 +45,5 @@ create table tbl_image_metadata (
 - XML Parsing Error: syntax error
 - remove https://unpkg.com
 - TypeError: WSGI response header value 469 is not of type str.
+- "HTTP/1.1 GET /service-worker.js" - 404 Not Found
+- Deploy
