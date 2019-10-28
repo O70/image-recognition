@@ -34,12 +34,26 @@ create table tbl_image_metadata (
 );
 ```
 
+## Attentions
+
+`.pb`文件过大, 已被清除.
+
+``` sh
+$ git filter-branch --index-filter 'git rm --cached --ignore-unmatch static/yolov3_yanxin1000_1016.pb'
+$ rm -rf .git/refs/original
+$ git reflog expire --expire=now --all
+$ git fsck --full --unreachable
+$ git repack -A -d
+$ git gc --aggressive --prune=now
+$ git push --force origin master
+```
+
 ## TODO
 
 - TODO: Remove
-- `rm -rf static/img`
 - `rm src/test.py`
 - Loading...
+- Image size: x*y
 - 304 Not Modified
 - RuntimeError('generator raised StopIteration') 
 - XML Parsing Error: syntax error
