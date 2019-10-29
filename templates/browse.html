@@ -15,6 +15,12 @@
 		font-size: 16px!important;
 		line-height: 32px!important;
 	}
+	.describe {
+		font-size: 18px;
+		/*white-space: normal;
+		word-wrap: break-word;
+		word-break: normal;*/
+	}
 	</style>
 </head>
 <body>
@@ -24,13 +30,13 @@
 			<el-row 
 				v-for="(rv, rind) in grids.rows" 
 				:key="rv" 
-				:gutter="5" 
+				:gutter="5"
 				style="margin-bottom: 5px;">
 				<el-col v-for="(cv, cind) in grids.cols" :key="rv + cv + ''" :span="grids.span">
 					<el-card 
 						v-if="rind * grids.cols + cind < metadatas.length" 
 						:body-style="{ padding: '5px' }">
-						<el-image 
+						<!-- <el-image 
 							:src="getItem(rind, cind).filepath"
 							fit="cover"
 							lazy
@@ -40,9 +46,28 @@
 							<el-tag type="success">{{ getItem(rind, cind).predict }}</el-tag>
 							<el-tag type="success">{{ getItem(rind, cind).category }}</el-tag>
 						</div>
-						<!-- <div class="mar-t">
+						<div class="mar-t">
 							{{ getItem(rind, cind).describe }}
 						</div> -->
+						<el-row :gutter="5">
+							<el-col :span="14">
+								<el-image 
+									:src="getItem(rind, cind).filepath"
+									fit="cover"
+									lazy
+									:preview-src-list="[getItem(rind, cind).filepath]"
+									class="image-preview"></el-image>
+							</el-col>
+							<el-col :span="10">
+								<div>
+									<el-tag type="success">{{ getItem(rind, cind).predict }}</el-tag>
+									<el-tag type="success">{{ getItem(rind, cind).category }}</el-tag>
+								</div>
+								<div class="mar-t describe">
+									{{ getItem(rind, cind).describe }}
+								</div>
+							</el-col>
+						</el-row>
 					</el-card>
 				</el-col>
 			</el-row>

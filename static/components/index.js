@@ -29,6 +29,15 @@ new Vue({
 		getItem(r, c) {
 			return this.metadatas[r * this.grids.cols + c];
 		},
+		findLabel(val) {
+			let res = '';
+			this.labels.forEach(it => {
+				const label = it.children.find(sit => sit.value === val);
+				label && (res = it.label + '/' + label.label);
+			});
+
+			return res;
+		},
 		handleSuccess(res = {}, file, fileList) {
 			this.metadatas.splice(0, 0, res);
 			const ind = fileList.findIndex(it => it.uid === file.uid);

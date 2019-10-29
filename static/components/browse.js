@@ -1,7 +1,7 @@
 new Vue({
 	el: '#app-container',
 	data: function() {
-		const cols = 6;
+		const cols = 3;
 		return {
 			metadatas: [],
 			grids: {
