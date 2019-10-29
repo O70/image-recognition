@@ -44,5 +44,6 @@ $ git push --force origin master
 - RuntimeError('generator raised StopIteration') 
 - remove https://unpkg.com
 - TypeError: WSGI response header value 469 is not of type str.
+- TypeError: super(type, obj): obj must be an instance or subtype of type
 - "HTTP/1.1 GET /service-worker.js" - 404 Not Found
 - Deploy

@@ -68,6 +68,9 @@ class Service(object):
 
 			getDB().insert(table_name, **metadata)
 
+		for p in predicts:
+			p.update(getLabel(p['category']))
+
 		return {
 			'id': metadata['id'],
 			'filepath': metadata['filepath'],

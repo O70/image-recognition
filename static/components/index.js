@@ -30,10 +30,10 @@ new Vue({
 			return this.metadatas[r * this.grids.cols + c];
 		},
 		findLabel(val) {
-			let res = '';
+			let res = {};
 			this.labels.forEach(it => {
-				const label = it.children.find(sit => sit.value === val);
-				label && (res = it.label + '/' + label.label);
+				const lab = it.children.find(sit => sit.value === val);
+				lab && (res = { label: it.label + '/' + lab.label, describe: lab.describe || 'None' });
 			});
 
 			return res;
@@ -43,9 +43,12 @@ new Vue({
 			const ind = fileList.findIndex(it => it.uid === file.uid);
 			ind > -1 && fileList.splice(ind, 1);
 		},
-		handleChange(category, id) {
+		handleChange(category, id, pred) {
 			axios.post('/update', { id, category }).then(res => {
 				console.log('update category', res);
+				const lab = this.findLabel(category);
+				Vue.set(pred, 'label', lab.label);
+				Vue.set(pred, 'describe', lab.describe);
 			}).catch(res => {
 				console.error('update category error: ', res);
 			});

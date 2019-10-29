@@ -109,7 +109,7 @@
 											</el-option-group>
 										</el-select>
 									</el-col> -->
-									<el-col :span="24">
+									<el-col :span="24" align="center">
 										<el-tag :type="getItem(rind, cind).id && 
 											pind === 0 ? 'success' : 'danger'">
 											{{ pred.predict }} 
@@ -133,18 +133,20 @@
 											</el-option>
 											</el-option-group>
 										</el-select> -->
-										<el-tag :type="getItem(rind, cind).id && 
-											pind === 0 ? 'success' : 'danger'">
-											{{ findLabel(pred.category) }} 
-										</el-tag>
+										<el-tooltip 
+											:content="pred.describe"
+											placement="top">
+											<el-tag :type="getItem(rind, cind).id && 
+												pind === 0 ? 'success' : 'danger'">
+												{{ pred.label }}
+											</el-tag>
+										</el-tooltip>
 										<el-popover
 											v-if="getItem(rind, cind).id && pind === 0"
-											placement="right"
-											width="400">
+											placement="right">
 											<el-select 
 										    	v-model="pred.category"
-										    	name="category"
-										    	@change="handleChange(\$event, getItem(rind, cind).id)">
+										    	@change="handleChange(\$event, getItem(rind, cind).id, pred)">
 												<el-option-group
 													v-for="group in labels"
 													:key="group.label"
