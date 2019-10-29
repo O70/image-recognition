@@ -6,38 +6,40 @@
 	<!-- <link rel="stylesheet" href="static/components/element-ui/index.css"> -->
 	<link rel="stylesheet" href="https://unpkg.com/element-ui@2.12.0/lib/theme-chalk/index.css">
 	<style type="text/css">
-	.clearfix:before,
-	.clearfix:after {
-		display: table;
-		content: "";
-	}
-
-	.clearfix:after {
-		clear: both
-	}
-
 	.image-uploader .el-upload {
-		border: 3px dashed #d9d9d9;
+		border: 1px dashed #d9d9d9;
 		border-radius: 6px;
 		cursor: pointer;
 		position: relative;
 		overflow: hidden;
+		width: 100%
 	}
 	.image-uploader .el-upload:hover {
 		border-color: #409EFF;
 	}
 	.image-uploader-icon {
-		font-size: 28px;
+		font-size: 36px;
+		font-weight: bold;
 		color: #8c939d;
-		width: 130px;
-		height: 130px;
-		line-height: 130px;
+		height: 92px;
+		line-height: 92px;
 		text-align: center;
 	}
-	.avatar {
-		width: 178px;
-		height: 178px;
-		display: block;
+
+	.image-preview {
+		width: 100%; 
+		height: 300px; 
+		border: 2px solid green; 
+		border-radius: 5px;
+	}
+
+	.mar-t { margin-top: 5px; }
+	.mar-b { margin-bottom: 5px; }
+
+	.el-tag {
+		/*height: 32px!important;*/
+		font-size: 18px!important;
+		line-height: 32px!important;
 	}
 	</style>
 </head>
@@ -46,7 +48,7 @@
 	<div id="app-container">
 		<el-row :gutter="10">
 			<el-col :span="5">
-				<el-card>
+				<el-card style="text-align: center;">
 					<el-upload
 						class="image-uploader"
 						action="/upload"
@@ -58,8 +60,52 @@
 				</el-card>
 			</el-col>
 			<el-col :span="19">
-				<!-- <el-card>123</el-card> -->
-				preview
+				<div v-if="metadatas.length > 0">
+					<el-row 
+						v-for="(rv, rind) in grids.rows" 
+						:key="rv" 
+						:gutter="5"
+						class="mar-b">
+						<el-col v-for="(cv, cind) in grids.cols" :key="rv + '-' + cv" :span="grids.span">
+							<el-card 
+								v-if="rind * grids.cols + cind < metadatas.length" 
+								:body-style="{ padding: '5px' }">
+								<el-image 
+									:src="getItem(rind, cind).filepath"
+									fit="cover"
+									lazy
+									:preview-src-list="[getItem(rind, cind).filepath]"
+									class="image-preview"></el-image>
+								<el-row 
+									v-for="(pred, pind) in getItem(rind, cind).predicts"
+									:key="rv + '-' + cv + '-' + pind"
+									:gutter="20"
+									:class="{ 'mar-t': pind > 0 }">
+									<el-col :span="24" style="text-align: right;">
+										<!-- <el-input 
+											v-model="getItem(rind, cind).predict" 
+											clearable
+											@change="handleInput(\$event, getItem(rind, cind))"
+											placeholder="请输入置信度">
+											<template slot="prepend">置信度</template>
+										</el-input> -->
+										<el-tag :type="pind === 0 ? 'success' : 'danger'">
+											{{ pred.predict }} 
+										</el-tag>
+										<el-tag :type="pind === 0 ? 'success' : 'danger'">
+											{{ pred.predict }} 
+										</el-tag>
+									</el-col>
+									<!-- <el-col :span="18">
+									</el-col> -->
+								</el-row>
+							</el-card>
+						</el-col>
+					</el-row>
+				</div>
+				<div v-else style="text-align: center;">
+					<h1>请上传图片</h1>
+				</div>
 			</el-col>
 		</el-row>
 	</div>
