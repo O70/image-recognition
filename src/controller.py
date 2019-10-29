@@ -21,6 +21,15 @@ class Browse(object):
 	def GET(self):
 		return render.browse()
 
+class List(object):
+	def __init__(self):
+		super(List, self).__init__()
+
+	def GET(self):
+		web.header('Content-Type', content_type)
+
+		return json.dumps(Service().list())
+		
 class Upload(object):
 	def __init__(self):
 		super(Upload, self).__init__()
@@ -31,15 +40,6 @@ class Upload(object):
 		file = data['file']
 
 		return json.dumps(Service().save(file.filename, file.file.read()))
-
-class List(object):
-	def __init__(self):
-		super(List, self).__init__()
-
-	def GET(self):
-		web.header('Content-Type', content_type)
-
-		return json.dumps(Service().list())
 
 class Update(object):
 	def __init__(self):

@@ -15,21 +15,45 @@
 	.clearfix:after {
 		clear: both
 	}
+
+	.image-uploader .el-upload {
+		border: 3px dashed #d9d9d9;
+		border-radius: 6px;
+		cursor: pointer;
+		position: relative;
+		overflow: hidden;
+	}
+	.image-uploader .el-upload:hover {
+		border-color: #409EFF;
+	}
+	.image-uploader-icon {
+		font-size: 28px;
+		color: #8c939d;
+		width: 130px;
+		height: 130px;
+		line-height: 130px;
+		text-align: center;
+	}
+	.avatar {
+		width: 178px;
+		height: 178px;
+		display: block;
+	}
 	</style>
 </head>
 <body>
 	
 	<div id="app-container">
-		<el-button size="small" type="primary" @click="handleUpdate">Update</el-button>
 		<el-row :gutter="10">
 			<el-col :span="5">
 				<el-card>
 					<el-upload
+						class="image-uploader"
 						action="/upload"
 						:on-success="handleSuccess"
 						:multiple="true"
 						list-type="picture">
-						<el-button size="small" type="primary">点击上传</el-button>
+						<i class="el-icon-plus image-uploader-icon"></i>
 					</el-upload>
 				</el-card>
 			</el-col>
@@ -45,6 +69,6 @@
 	<script src="static/components/vue/vue.js"></script>
 	<!-- <script src="static/components/element-ui/index.js"></script> -->
 	<script src="https://unpkg.com/element-ui@2.12.0/lib/index.js"></script>
-	<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+	<script src="static/components/axios.min.js"></script>
 	<script src="static/components/index.js"></script>
 </html>
