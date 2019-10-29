@@ -27,18 +27,16 @@
 	}
 
 	.image-preview {
-		width: 100%; 
+		width: 98%; 
 		height: 300px; 
 		border: 2px solid green; 
-		border-radius: 5px;
 	}
 
 	.mar-t { margin-top: 5px; }
 	.mar-b { margin-bottom: 5px; }
 
 	.el-tag {
-		/*height: 32px!important;*/
-		font-size: 18px!important;
+		font-size: 14px!important;
 		line-height: 32px!important;
 	}
 	</style>
@@ -81,23 +79,32 @@
 									:key="rv + '-' + cv + '-' + pind"
 									:gutter="20"
 									:class="{ 'mar-t': pind > 0 }">
-									<el-col :span="24" style="text-align: right;">
-										<!-- <el-input 
-											v-model="getItem(rind, cind).predict" 
-											clearable
-											@change="handleInput(\$event, getItem(rind, cind))"
-											placeholder="请输入置信度">
-											<template slot="prepend">置信度</template>
-										</el-input> -->
-										<el-tag :type="pind === 0 ? 'success' : 'danger'">
-											{{ pred.predict }} 
-										</el-tag>
-										<el-tag :type="pind === 0 ? 'success' : 'danger'">
-											{{ pred.predict }} 
+									<el-col :span="8" style="text-align: right;">
+										<el-tag :type="getItem(rind, cind).id && 
+											pind === 0 ? 'success' : 'danger'">
+											置信度: {{ pred.predict }} 
 										</el-tag>
 									</el-col>
-									<!-- <el-col :span="18">
-									</el-col> -->
+									<el-col :span="16" style="text-align: center;">
+									    <el-select 
+									    	v-model="pred.category"
+									    	:disabled="!(getItem(rind, cind).id && pind === 0)"
+									    	@change="handleChange(\$event, getItem(rind, cind).id)">
+											<el-option-group
+												v-for="group in labels"
+												:key="group.label"
+												:label="group.label">
+											<el-option
+												v-for="item in group.children"
+												:key="item.value"
+												:label="item.label"
+												:value="item.value">
+												<span style="float: left">{{ item.label }}</span>
+      											<span style="float: right; color: #8492a6; font-size: 13px;max-width: 300px;">{{ item.describe }}</span>
+											</el-option>
+											</el-option-group>
+										</el-select>
+									</el-col>
 								</el-row>
 							</el-card>
 						</el-col>

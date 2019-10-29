@@ -5,14 +5,15 @@
 
 	<link rel="stylesheet" href="https://unpkg.com/element-ui@2.12.0/lib/theme-chalk/index.css">
 	<style type="text/css">
-	.clearfix:before,
-	.clearfix:after {
-		display: table;
-		content: "";
+	.image-preview {
+		width: 98%; 
+		height: 300px; 
+		border: 2px solid green; 
 	}
-
-	.clearfix:after {
-		clear: both
+	.mar-t { margin-top: 5px; }
+	.el-tag {
+		font-size: 14px!important;
+		line-height: 32px!important;
 	}
 	</style>
 </head>
@@ -34,30 +35,14 @@
 							fit="cover"
 							lazy
 							:preview-src-list="[getItem(rind, cind).filepath]"
-							style="width: 300px; height: 300px; border: 2px solid green; border-radius: 5px;"></el-image>
-						<el-row :gutter="5">
-							<el-col :span="16">
-								<el-input 
-									v-model="getItem(rind, cind).probability" 
-									clearable
-									:disabled="true"
-									placeholder="请输入置信度">
-									<template slot="prepend">置信度</template>
-								</el-input>
-							</el-col>
-							<el-col :span="8">
-								<el-select 
-									v-model="getItem(rind, cind).category"
-									:disabled="true"
-									placeholder="请选择类别">
-									<el-option
-										v-for="(it, ind) in categorys"
-										:key="it"
-										:label="it"
-										:value="ind"/>
-								</el-select>
-							</el-col>
-						</el-row>
+							class="image-preview"></el-image>
+						<div>
+							<el-tag type="success">{{ getItem(rind, cind).predict }}</el-tag>
+							<el-tag type="success">{{ getItem(rind, cind).category }}</el-tag>
+						</div>
+						<!-- <div class="mar-t">
+							{{ getItem(rind, cind).describe }}
+						</div> -->
 					</el-card>
 				</el-col>
 			</el-row>

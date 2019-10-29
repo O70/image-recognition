@@ -3,7 +3,6 @@ new Vue({
 	data: function() {
 		const cols = 6;
 		return {
-			categorys: ['W', 'WP', 'P', 'S', 'rubbled'],
 			metadatas: [],
 			grids: {
 				rows: 0, 
@@ -19,7 +18,7 @@ new Vue({
 	},
 	created() {
 		axios.get('/list').then(({ data = [] }) => {
-			this.metadatas = [...data, ...this.metadatas];
+			this.metadatas = data;
 		}).catch(res => {
 			console.error('got error: ' + res);
 		});

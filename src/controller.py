@@ -2,6 +2,7 @@
 
 import web, json
 from service import Service
+from config import LABELS
 
 render = web.template.render('templates/')
 
@@ -29,7 +30,7 @@ class List(object):
 		web.header('Content-Type', content_type)
 
 		return json.dumps(Service().list())
-		
+
 class Upload(object):
 	def __init__(self):
 		super(Upload, self).__init__()
@@ -51,3 +52,12 @@ class Update(object):
 		web.header('Content-Type', content_type)
 
 		return json.dumps({ 'data': True })
+
+class Labels(object):
+	def __init__(self):
+		super(Labels, self).__init__()
+	
+	def GET(self):
+		web.header('Content-Type', content_type)
+		
+		return json.dumps(LABELS)

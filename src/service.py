@@ -6,7 +6,7 @@ from PIL import Image
 from io import BytesIO
 from web import database
 
-from config import JDBCS, PREDICT_MIN, getSubDir
+from config import JDBCS, PREDICT_MIN, getSubDir, getLabel
 from process import Process
 
 table_name = 'tbl_image_metadata'
@@ -24,12 +24,18 @@ class Service(object):
 		super(Service, self).__init__()
 
 	def list(self):
-		rs = getDB().select(table_name, order = 'create_date desc, final_name')
+		rs = getDB().select(table_name, order = 'category, create_date desc')
 
 		result = []
 		for x in rs:
-			x['create_date'] = x.create_date.strftime('%Y-%m-%d %H:%M:%S')
-			result.append(x)
+			label = getLabel(x['category'])
+			result.append({
+				'id': x['id'],	
+				'filepath': x['filepath'],	
+				'predict': x['predict'],	
+				'category': label['label'],	
+				'describe': label['describe']
+			})
 
 		return result
 
@@ -56,6 +62,8 @@ class Service(object):
 			metadata['id'] = str(uuid.uuid1())
 			metadata['filename'] = newname
 			metadata['filepath'] = filepath
+			metadata['predict'] = maxPredict['predict']
+			metadata['category'] = maxPredict['category']
 			metadata['create_date'] = datetime.datetime.now()
 
 			getDB().insert(table_name, **metadata)

@@ -287,3 +287,13 @@ def getSubDir(val):
         for l in pl['children']:
             if l['value'] == val:
                 return pl['label'] + '/' + l['label'] + '/'
+
+def getLabel(val):
+    result = { 'label': None, 'describe': None }
+    for pl in LABELS:
+        for l in pl['children']:
+            if l['value'] == val:
+                result['label'] = pl['label'] + '/' + l['label']
+                result['describe'] = l['describe']
+
+    return result
