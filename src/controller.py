@@ -47,11 +47,9 @@ class Update(object):
 		super(Update, self).__init__()
 
 	def POST(self):
-		Service().update(json.loads(web.data()))
-
 		web.header('Content-Type', content_type)
 
-		return json.dumps({ 'data': True })
+		return json.dumps(Service().update(json.loads(web.data())))
 
 class Labels(object):
 	def __init__(self):

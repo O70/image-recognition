@@ -43,10 +43,11 @@ new Vue({
 			const ind = fileList.findIndex(it => it.uid === file.uid);
 			ind > -1 && fileList.splice(ind, 1);
 		},
-		handleChange(category, id, pred) {
-			axios.post('/update', { id, category }).then(res => {
+		handleChange(category, md, pred) {
+			axios.post('/update', { id: md.id, category }).then(res => {
 				console.log('update category', res);
 				const lab = this.findLabel(category);
+				Vue.set(md, 'filepath', res.data.filepath);
 				Vue.set(pred, 'label', lab.label);
 				Vue.set(pred, 'describe', lab.describe);
 			}).catch(res => {

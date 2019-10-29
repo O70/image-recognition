@@ -78,6 +78,24 @@ class Service(object):
 		}
 
 	def update(self, metadata):
-		getDB().update(table_name, 
-			where = "id = '" + metadata['id'] + "'", 
-			category = str(metadata['category']))
+		result = {}
+
+		db = getDB()
+		rid, category = metadata.values()
+		c = db.update(table_name, where = "id = '" + rid + "'", category = str(category))
+
+		if c > 0:
+			rows = db.select(table_name, where = "id = '" + rid + "'")
+			if len(rows) > 0:
+				row = rows[0]
+				if os.path.exists(row.filepath):
+					oldpath = row.filepath
+					newDirpath = dir_prefix + '/repos/' + getSubDir(category)
+					mkdirs(newDirpath)
+					newpath = newDirpath + row.filename
+					c1 = db.update(table_name, where = "id = '" + rid + "'", filepath = newpath)
+					if c1 > 0:
+						result['filepath'] = newpath
+						shutil.move(oldpath, newpath)
+
+		return result

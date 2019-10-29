@@ -146,7 +146,7 @@
 											placement="right">
 											<el-select 
 										    	v-model="pred.category"
-										    	@change="handleChange(\$event, getItem(rind, cind).id, pred)">
+										    	@change="handleChange(\$event, getItem(rind, cind), pred)">
 												<el-option-group
 													v-for="group in labels"
 													:key="group.label"
