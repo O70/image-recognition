@@ -31,6 +31,8 @@ new Vue({
 		},
 		handleSuccess(res = {}, file, fileList) {
 			this.metadatas.splice(0, 0, res);
+			const ind = fileList.findIndex(it => it.uid === file.uid);
+			ind > -1 && fileList.splice(ind, 1);
 		},
 		handleChange(category, id) {
 			axios.post('/update', { id, category }).then(res => {
