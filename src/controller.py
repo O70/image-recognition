@@ -8,6 +8,14 @@ render = web.template.render('templates/')
 
 content_type = 'application/json'
 
+class Icon(object):
+	def __init__(self):
+		super(Icon, self).__init__()
+
+	def GET(self):
+		raise web.seeother('/static/images/favicon.ico')
+		
+
 class Home(object):
 	def __init__(self):
 		super(Home, self).__init__()
