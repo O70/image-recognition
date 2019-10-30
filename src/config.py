@@ -4,7 +4,8 @@ JDBCS = {
 	'dbn': 'mysql',
 	'user': 'root',
 	'pw': 'mysql',
-	'db': 'riped-config'
+	'db': 'riped-config',
+    'host': 'localhost'
 }
 
 PREDICT_MIN = 0.7

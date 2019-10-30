@@ -17,7 +17,8 @@ def mkdirs(dirpath):
 		os.makedirs(dirpath)
 
 def getDB():
-	return database(dbn = JDBCS['dbn'], user = JDBCS['user'], pw = JDBCS['pw'], db = JDBCS['db'])
+	return database(dbn = JDBCS['dbn'], user = JDBCS['user'], 
+		pw = JDBCS['pw'], db = JDBCS['db'], host = JDBCS['host'])
 
 class Service(object):
 	def __init__(self):
