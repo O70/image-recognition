@@ -1,0 +1,36 @@
+.image-uploader .el-upload {
+	border: 1px dashed #d9d9d9;
+	border-radius: 6px;
+	cursor: pointer;
+	position: relative;
+	overflow: hidden;
+	width: 100%;
+}
+.image-uploader .el-upload:hover {
+	border-color: #409EFF;
+}
+.image-uploader-icon {
+	font-size: 36px;
+	font-weight: bold;
+	color: #8c939d;
+	height: 92px;
+	line-height: 92px;
+	text-align: center;
+}
+
+.image-preview {
+	width: 98%; 
+	height: 300px; 
+	border: 2px solid green; 
+}
+
+.mar-t { margin-top: 5px; }
+.mar-b { margin-bottom: 5px; }
+
+.el-tag {
+	font-size: 16px!important;
+	line-height: 32px!important;
+}
+.el-icon-edit {
+	cursor: pointer;
+}

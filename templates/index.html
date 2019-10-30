@@ -1,186 +1,46 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Image Recognition</title>
-
-	<!-- <link rel="stylesheet" href="static/components/element-ui/index.css"> -->
-	<link rel="stylesheet" href="https://unpkg.com/element-ui@2.12.0/lib/theme-chalk/index.css">
-	<style type="text/css">
-	.image-uploader .el-upload {
-		border: 1px dashed #d9d9d9;
-		border-radius: 6px;
-		cursor: pointer;
-		position: relative;
-		overflow: hidden;
-		width: 100%
-	}
-	.image-uploader .el-upload:hover {
-		border-color: #409EFF;
-	}
-	.image-uploader-icon {
-		font-size: 36px;
-		font-weight: bold;
-		color: #8c939d;
-		height: 92px;
-		line-height: 92px;
-		text-align: center;
-	}
-
-	.image-preview {
-		width: 98%; 
-		height: 300px; 
-		border: 2px solid green; 
-	}
-
-	.mar-t { margin-top: 5px; }
-	.mar-b { margin-bottom: 5px; }
-
-	.el-tag {
-		font-size: 16px!important;
-		line-height: 32px!important;
-	}
-	.el-icon-edit {
-		cursor: pointer;
-	}
-	</style>
+	<title>岩性识别</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<link rel="stylesheet" href="static/components/next-uikit/fonts/icomoon/style.css">
+	<link rel="stylesheet" href="static/components/next-uikit/css/bootstrap.min.css">
+	<!-- <link rel="stylesheet" href="static/components/next-uikit/css/nouislider.min.css"> -->
+	<!-- <link rel="stylesheet" href="static/components/next-uikit/css/bootstrap-datetimepicker.css"> -->
+	<link rel="stylesheet" href="static/components/next-uikit/css/style.css">
 </head>
 <body>
-	
-	<div id="app-container">
-		<el-row :gutter="10">
-			<el-col :span="5">
-				<el-card style="text-align: center;">
-					<el-upload
-						ref="upload"
-						class="image-uploader"
-						action="/upload"
-						:on-success="handleSuccess"
-						:multiple="true"
-						list-type="picture">
-						<i class="el-icon-plus image-uploader-icon"></i>
-					</el-upload>
-				</el-card>
-			</el-col>
-			<el-col :span="19">
-				<div v-if="metadatas.length > 0">
-					<el-row 
-						v-for="(rv, rind) in grids.rows" 
-						:key="rv" 
-						:gutter="5"
-						class="mar-b">
-						<el-col v-for="(cv, cind) in grids.cols" :key="rv + '-' + cv" :span="grids.span">
-							<el-card 
-								v-if="rind * grids.cols + cind < metadatas.length" 
-								:body-style="{ padding: '5px' }">
-								<el-image 
-									:src="getItem(rind, cind).filepath"
-									fit="cover"
-									lazy
-									:preview-src-list="[getItem(rind, cind).filepath]"
-									class="image-preview"></el-image>
-								<el-row 
-									v-for="(pred, pind) in getItem(rind, cind).predicts"
-									:key="rv + '-' + cv + '-' + pind"
-									:gutter="20"
-									:class="{ 'mar-t': pind > 0 }">
-									<!-- <el-col :span="8">
-										<el-tag :type="getItem(rind, cind).id && 
-											pind === 0 ? 'success' : 'danger'">
-											{{ pred.predict }} 
-										</el-tag>
-									</el-col>
-									<el-col :span="16" style="text-align: right;">
-									    <el-select 
-									    	v-model="pred.category"
-									    	:disabled="!(getItem(rind, cind).id && pind === 0)"
-									    	@change="handleChange(\$event, getItem(rind, cind).id)">
-											<el-option-group
-												v-for="group in labels"
-												:key="group.label"
-												:label="group.label">
-											<el-option
-												v-for="item in group.children"
-												:key="item.value"
-												:label="item.label"
-												:value="item.value">
-												<span style="float: left">{{ item.label }}</span>
-      											<span style="float: right; color: #8492a6; font-size: 13px;max-width: 300px;">{{ item.describe }}</span>
-											</el-option>
-											</el-option-group>
-										</el-select>
-									</el-col> -->
-									<el-col :span="24" align="center">
-										<el-tag :type="getItem(rind, cind).id && 
-											pind === 0 ? 'success' : 'danger'">
-											{{ pred.predict }} 
-										</el-tag>
-										<!-- <el-select 
-									    	v-model="pred.category"
-									    	name="category"
-									    	v-if="getItem(rind, cind).id && pind === 0"
-									    	@change="handleChange(\$event, getItem(rind, cind).id)">
-											<el-option-group
-												v-for="group in labels"
-												:key="group.label"
-												:label="group.label">
-											<el-option
-												v-for="item in group.children"
-												:key="item.value"
-												:label="item.label"
-												:value="item.value">
-												<span style="float: left">{{ item.label }}</span>
-      											<span style="float: right; color: #8492a6; font-size: 13px;max-width: 300px;">{{ item.describe }}</span>
-											</el-option>
-											</el-option-group>
-										</el-select> -->
-										<el-tooltip 
-											:content="pred.describe"
-											placement="top">
-											<el-tag :type="getItem(rind, cind).id && 
-												pind === 0 ? 'success' : 'danger'">
-												{{ pred.label }}
-											</el-tag>
-										</el-tooltip>
-										<el-popover
-											v-if="getItem(rind, cind).id && pind === 0"
-											placement="right">
-											<el-select 
-										    	v-model="pred.category"
-										    	@change="handleChange(\$event, getItem(rind, cind), pred)">
-												<el-option-group
-													v-for="group in labels"
-													:key="group.label"
-													:label="group.label">
-												<el-option
-													v-for="item in group.children"
-													:key="item.value"
-													:label="item.label"
-													:value="item.value">
-													<span style="float: left">{{ item.label }}</span>
-	      											<span style="float: right; color: #8492a6; font-size: 13px;max-width: 300px;">{{ item.describe }}</span>
-												</el-option>
-												</el-option-group>
-											</el-select>
-											<i class="el-icon-edit" slot="reference"></i>
-										</el-popover>
-									</el-col>
-								</el-row>
-							</el-card>
-						</el-col>
-					</el-row>
+    
+	<div class="site-section bg-image" 
+		style="background-image: url('static/images/home_bg.jpg')">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-md-7 mx-auto text-center align-self-center">
+		        	<img src="static/images/logo.jpg" alt="Logo" 
+		        		class="img-fluid w-50 rounded-circle">
+					<h1 class="font-weight-bold mb-0 text-white">拍照识岩性</h1>
+					<div class="row mb-5">
+						<div class="col">
+							<button class="btn btn-info">
+								<span class="icon-upload mr-1"></span> 上  传
+							</button>
+							<button class="btn btn-success">
+								<span class="icon-image mr-1"></span> 浏  览
+							</button>
+						</div>
+					</div>
 				</div>
-				<div v-else style="text-align: center;">
-					<h1>请上传图片</h1>
-				</div>
-			</el-col>
-		</el-row>
+			</div>
+		</div>
 	</div>
 
+	<!-- <script src="static/components/next-uikit/js/jquery-3.3.1.min.js"></script> -->
+	<!-- <script src="static/components/next-uikit/js/popper.min.js"></script> -->
+	<!-- <script src="static/components/next-uikit/js/bootstrap.min.js"></script> -->
+	<!-- <script src="static/components/next-uikit/js/moments.min.js"></script> -->
+	<!-- <script src="static/components/next-uikit/js/bootstrap-datetimepicker.js"></script> -->
+	<!-- <script src="static/components/next-uikit/js/nouislider.min.js"></script> -->
+	<!-- <script src="static/components/next-uikit/js/main.js"></script> -->
 </body>
-
-	<script src="static/components/vue/vue.js"></script>
-	<!-- <script src="static/components/element-ui/index.js"></script> -->
-	<script src="https://unpkg.com/element-ui@2.12.0/lib/index.js"></script>
-	<script src="static/components/axios.min.js"></script>
-	<script src="static/components/index.js"></script>
 </html>
