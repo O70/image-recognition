@@ -7,15 +7,25 @@ new Vue({
 			grids: {
 				rows: 0, 
 				cols,
-				span: 24 /cols
+				span: 24 / cols
+			},
+			hgrids: {
+				rows: 0, 
+				cols,
+				span: 24 / cols
 			},
 			categorys: [],
-			labels: []
+			labels: [],
+			drawer: false,
+			historys: []
 		};
 	},
 	watch: {
 		metadatas() {
 			this.grids.rows = Math.ceil(this.metadatas.length / this.grids.cols);
+		},
+		historys() {
+			this.hgrids.rows = Math.ceil(this.historys.length / this.hgrids.cols);
 		}
 	},
 	created() {
@@ -24,10 +34,19 @@ new Vue({
 		}).catch(res => {
 			console.error('got labels error: ', res);
 		});
+
+		axios.get('/list').then(({ data = [] }) => {
+			this.historys = data;
+		}).catch(res => {
+			console.error('got error: ' + res);
+		});
 	},
 	methods: {
 		getItem(r, c) {
 			return this.metadatas[r * this.grids.cols + c];
+		},
+		getHistoryItem(r, c) {
+			return this.historys[r * this.hgrids.cols + c];
 		},
 		findLabel(val) {
 			let res = {};

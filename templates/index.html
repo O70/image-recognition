@@ -2,49 +2,203 @@
 <html>
 <head>
 	<title>岩性识别</title>
-	<meta charset="utf-8">
+	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
 	<link rel="stylesheet" href="static/components/next-uikit/fonts/icomoon/style.css">
 	<link rel="stylesheet" href="static/components/next-uikit/css/bootstrap.min.css">
 	<!-- <link rel="stylesheet" href="static/components/next-uikit/css/nouislider.min.css"> -->
 	<!-- <link rel="stylesheet" href="static/components/next-uikit/css/bootstrap-datetimepicker.css"> -->
 	<link rel="stylesheet" href="static/components/next-uikit/css/style.css">
+	<link rel="stylesheet" href="https://unpkg.com/element-ui@2.12.0/lib/theme-chalk/index.css">
+	<style type="text/css">
+	.image-preview {
+		width: 98%; 
+		height: 300px; 
+		border: 2px solid green; 
+	}	
+	</style>
 </head>
 <body>
     
-	<div class="site-section bg-image" 
-		style="background-image: url('static/images/home_bg.jpg')">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-7 mx-auto text-center align-self-center">
-		        	<img src="static/images/logo.jpg" alt="Logo" 
-		        		class="img-fluid w-50 rounded-circle">
-					<h1 class="font-weight-bold mb-0 text-white">拍照识岩性</h1>
-					<div class="row mb-5">
-						<div class="col">
-							<button class="btn btn-lg btn-info">
-								<span class="icon-upload mr-1"></span> 上  传
-							</button>
-							<button class="btn btn-lg btn-success">
-								<span class="icon-image mr-1"></span> 浏  览
-							</button>
-							<button class="btn btn-lg btn-warning">
-								<span class="icon-download mr-1"></span> 下  载
-							</button>
+    <div id="app-container">
+    	<div class="site-section bg-image" 
+			style="background-image: url('static/images/home_bg.jpg')">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-7 mx-auto text-center align-self-center">
+			        	<img src="static/images/logo.jpg" alt="Logo" 
+			        		class="img-fluid w-50 rounded-circle"
+			        		ondragstart="return false">
+						<h1 class="font-weight-bold mb-0 text-white">看图识岩性</h1>
+						<div class="row mb-5">
+							<div class="col">
+								<button class="btn btn-lg btn-info" @click="drawer = true">
+									<span class="icon-upload mr-1"></span> 上  传
+								</button>
+								<button class="btn btn-lg btn-success">
+									<span class="icon-image mr-1"></span> 浏  览
+								</button>
+								<button class="btn btn-lg btn-warning" onclick="alert('TODO...')">
+									<span class="icon-download mr-1"></span> 下  载
+								</button>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 		</div>
-	</div>
 
-	<div id="image-preview" class="site-section">
-		preview-image
-	</div>
+		<div id="image-preview" class="site-section1">
+			<div class="container">
+				<div class="row">
+					<div>
+						<h2 class="heading-21921">预览</h2>
+						<div v-if="metadatas.length > 0">
+							<el-row 
+								v-for="(rv, rind) in grids.rows" 
+								:key="rv" 
+								:gutter="5"
+								class="mar-b">
+								<el-col v-for="(cv, cind) in grids.cols" :key="rv + '-' + cv" :span="grids.span">
+									<el-card 
+										v-if="rind * grids.cols + cind < metadatas.length" 
+										:body-style="{ padding: '5px' }">
+										<el-image 
+											:src="getItem(rind, cind).filepath"
+											fit="cover"
+											lazy
+											:preview-src-list="[getItem(rind, cind).filepath]"
+											class="image-preview"></el-image>
+										<el-row 
+											v-for="(pred, pind) in getItem(rind, cind).predicts"
+											:key="rv + '-' + cv + '-' + pind"
+											:gutter="20"
+											:class="{ 'mar-t': pind > 0 }">
+											<el-col :span="24" align="center">
+												<el-tag :type="getItem(rind, cind).id && 
+													pind === 0 ? 'success' : 'danger'">
+													{{ pred.predict }} 
+												</el-tag>
+												<el-tooltip 
+													:content="pred.describe"
+													placement="top">
+													<el-tag :type="getItem(rind, cind).id && 
+														pind === 0 ? 'success' : 'danger'">
+														{{ pred.label }}
+													</el-tag>
+												</el-tooltip>
+												<el-popover
+													v-if="getItem(rind, cind).id && pind === 0"
+													placement="right">
+													<el-select 
+												    	v-model="pred.category"
+												    	@change="handleChange(\$event, getItem(rind, cind), pred)">
+														<el-option-group
+															v-for="group in labels"
+															:key="group.label"
+															:label="group.label">
+														<el-option
+															v-for="item in group.children"
+															:key="item.value"
+															:label="item.label"
+															:value="item.value">
+															<span style="float: left">{{ item.label }}</span>
+			      											<span style="float: right; color: #8492a6; font-size: 13px;max-width: 300px;">{{ item.describe }}</span>
+														</el-option>
+														</el-option-group>
+													</el-select>
+													<i class="el-icon-edit" slot="reference"></i>
+												</el-popover>
+											</el-col>
+										</el-row>
+									</el-card>
+								</el-col>
+							</el-row>
+						</div>
+						<div v-else>
+							<h3>请上传图片</h3>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
-	<div id="image-preview" class="site-section">
-		preview-image
-	</div>
+		<div id="image-history" class="site-section1">
+			<div class="container">
+				<div class="row mb-4">
+					<div>
+						<h2 class="heading-21921">浏览</h2>
+						<div v-if="historys.length > 0">
+							<el-row 
+								v-for="(rv, rind) in hgrids.rows" 
+								:key="rv" 
+								:gutter="5"
+								style="margin-bottom: 5px;">
+								<el-col 
+									v-for="(cv, cind) in hgrids.cols" 
+									:key="rv + cv + ''" 
+									:span="hgrids.span">
+									<el-card 
+										v-if="rind * hgrids.cols + cind < historys.length" 
+										:body-style="{ padding: '5px' }">
+										<el-row :gutter="5">
+											<el-col :span="14">
+												<el-image 
+													:src="getHistoryItem(rind, cind).filepath"
+													fit="cover"
+													lazy
+													:preview-src-list="[getHistoryItem(rind, cind).filepath]"
+													class="image-preview"></el-image>
+											</el-col>
+											<el-col :span="10">
+												<div>
+													<el-tag type="success">{{ getHistoryItem(rind, cind).predict }}</el-tag>
+													<el-tag type="success">{{ getHistoryItem(rind, cind).category }}</el-tag>
+												</div>
+												<div class="mar-t describe">
+													{{ getHistoryItem(rind, cind).describe }}
+												</div>
+											</el-col>
+										</el-row>
+									</el-card>
+								</el-col>
+							</el-row>
+						</div>
+						<div v-else>
+							<h3>暂无图片</h3>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<el-drawer 
+			ref="drawer"
+			:visible.sync="drawer" 
+			:show-close="true "
+			direction="ttb"
+			size="50%">
+			<div slot="title">
+				<i class="icon-image"></i> 选择图片
+			</div>
+			<div class="m-3">
+				<el-upload
+					ref="upload"
+					action="/upload"
+					:on-success="handleSuccess"
+					:multiple="true"
+					list-type="picture-card">
+					<i class="el-icon-plus"></i>
+				</el-upload>
+			</div>
+		</el-drawer>
+    </div>
+
+	<script src="static/components/vue/vue.js"></script>
+	<script src="https://unpkg.com/element-ui@2.12.0/lib/index.js"></script>
+	<script src="static/components/axios.min.js"></script>
+	<script src="static/components/index.js"></script>
 
 	<!-- <script src="static/components/next-uikit/js/jquery-3.3.1.min.js"></script> -->
 	<!-- <script src="static/components/next-uikit/js/popper.min.js"></script> -->
