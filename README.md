@@ -1,11 +1,5 @@
 # Image Recognition
 
-## Run
-
-``` sh
-$ python3 src/app.py 80
-```
-
 ## Table
 
 ``` sql
@@ -19,6 +13,20 @@ create table tbl_image_metadata (
     category int,
     create_date datetime
 );
+```
+
+数据库连接配置在`src/config.py`中.
+
+## Run
+
+``` sh
+$ pip install web.py==0.40
+$ pip install pillow
+$ pip install pymysql
+```
+
+``` sh
+$ python3 src/app.py 80
 ```
 
 ## Attentions
@@ -37,9 +45,10 @@ $ git push --force origin master
 
 - Deprecated: `Browse`
 
-## TODO
+## Bugs
 
 - Image size: x*y
+- `el-select`'s `describe` style
 - RuntimeError('generator raised StopIteration') 
 - TypeError: WSGI response header value 469 is not of type str.
 - 'WSGI response header value %r is not of type str.' % v,
