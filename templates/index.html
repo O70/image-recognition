@@ -17,6 +17,9 @@
 		height: 300px; 
 		border: 2px solid green; 
 	}	
+	.el-tab-pane {
+		min-height: 12rem;
+	}
 	</style>
 </head>
 <body>
@@ -36,9 +39,9 @@
 								<button class="btn btn-lg btn-info" @click="drawer = true">
 									<span class="icon-upload mr-1"></span> 上  传
 								</button>
-								<button class="btn btn-lg btn-success">
+								<!-- <button class="btn btn-lg btn-success">
 									<span class="icon-image mr-1"></span> 浏  览
-								</button>
+								</button> -->
 								<button class="btn btn-lg btn-warning" onclick="alert('TODO...')">
 									<span class="icon-download mr-1"></span> 下  载
 								</button>
@@ -46,10 +49,75 @@
 						</div>
 					</div>
 				</div>
+				<div class="row1">
+					<div class="mb-4" v-if="true">
+						<el-tabs type="border-card">
+							<el-tab-pane>
+								<span slot="label">
+									<i class="icon-image"></i> 已识别记录
+								</span>
+								<div v-if="historys.length > 0">
+									<el-row 
+										v-for="(rv, rind) in hgrids.rows" 
+										:key="rv" 
+										:gutter="5"
+										style="margin-bottom: 5px;">
+										<el-col 
+											v-for="(cv, cind) in hgrids.cols" 
+											:key="rv + cv + ''" 
+											:span="hgrids.span">
+											<el-card 
+												v-if="rind * hgrids.cols + cind < historys.length" 
+												:body-style="{ padding: '5px' }">
+												<el-row :gutter="5">
+													<el-col :span="14">
+														<el-image 
+															:src="getHistoryItem(rind, cind).filepath"
+															fit="cover"
+															lazy
+															:preview-src-list="[getHistoryItem(rind, cind).filepath]"
+															class="image-preview"></el-image>
+													</el-col>
+													<el-col :span="10">
+														<div>
+															<el-tag type="success">{{ getHistoryItem(rind, cind).predict }}</el-tag>
+															<el-tag type="success">{{ getHistoryItem(rind, cind).category }}</el-tag>
+														</div>
+														<div class="mar-t describe">
+															{{ getHistoryItem(rind, cind).describe }}
+														</div>
+													</el-col>
+												</el-row>
+											</el-card>
+										</el-col>
+									</el-row>
+								</div>
+							</el-tab-pane>
+							<el-tab-pane>
+								<span slot="label">
+									<i class="icon-image"></i> 人工鉴定记录
+								</span>
+							</el-tab-pane>
+							<el-tab-pane>
+								<span slot="label">
+									<i class="icon-image"></i> 未能识别记录
+								</span>
+							</el-tab-pane>
+							<el-tab-pane>
+								<span slot="label">
+									<i class="icon-image"></i> 当前记录
+								</span>
+								<div>
+									
+								</div>
+							</el-tab-pane>
+						</el-tabs>
+					</div>
+				</div>
 			</div>
 		</div>
 
-		<div id="image-preview" class="site-section1">
+		<div id="image-preview" class="site-section1" v-if="false">
 			<div class="container">
 				<div class="row">
 					<div>
@@ -124,7 +192,7 @@
 			</div>
 		</div>
 
-		<div id="image-history" class="site-section1">
+		<div id="image-history" class="site-section1" v-if="false">
 			<div class="container">
 				<div class="row mb-4">
 					<div>

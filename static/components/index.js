@@ -2,6 +2,7 @@ new Vue({
 	el: '#app-container',
 	data() {
 		const cols = 4;
+		const hcols = 2;
 		return {
 			metadatas: [],
 			grids: {
@@ -12,7 +13,7 @@ new Vue({
 			hgrids: {
 				rows: 0, 
 				cols,
-				span: 24 / cols
+				span: 24 / hcols
 			},
 			categorys: [],
 			labels: [],
