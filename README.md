@@ -47,7 +47,6 @@ $ git push --force origin master
 
 ## Bugs
 
-- Image size: x*y
 - `el-select`'s `describe` style
 - RuntimeError('generator raised StopIteration') 
 - TypeError: WSGI response header value 469 is not of type str.

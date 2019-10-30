@@ -41,6 +41,15 @@ new Vue({
 
 			return res;
 		},
+		// Deprecated
+		handleBefore(file) {
+			// TODO: Size limit
+			const ok = this.imgType.findIndex(it => it === file.type) > -1;
+
+			!ok && this.$message.error(`请选择JPG/PNG格式图片: ${file.name}`);
+
+			return ok;
+		},
 		handleSuccess(res = {}, file, fileList) {
 			this.metadatas.splice(0, 0, res);
 			const ind = fileList.findIndex(it => it.uid === file.uid);
