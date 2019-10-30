@@ -18,7 +18,8 @@ new Vue({
 			categorys: [],
 			labels: [],
 			drawer: false,
-			historys: []
+			historys: [],
+			selected: '0'
 		};
 	},
 	watch: {
@@ -62,6 +63,8 @@ new Vue({
 			this.metadatas.splice(0, 0, res);
 			const ind = fileList.findIndex(it => it.uid === file.uid);
 			ind > -1 && fileList.splice(ind, 1);
+
+			(this.selected != '3') && (this.selected = '3')
 		},
 		handleChange(category, md, pred) {
 			axios.post('/update', { id: md.id, category }).then(res => {
