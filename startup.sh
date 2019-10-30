@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-python3 src/app.py
+python3 src/app.py 80

@@ -3,7 +3,7 @@
 ## Run
 
 ``` sh
-$ python3 src/app.py
+$ python3 src/app.py 80
 ```
 
 ## Table
@@ -40,9 +40,9 @@ $ git push --force origin master
 ## TODO
 
 - Image size: x*y
-- RuntimeError('generator raised StopIteration') 
 - remove https://unpkg.com
+- RuntimeError('generator raised StopIteration') 
 - TypeError: WSGI response header value 469 is not of type str.
+- 'WSGI response header value %r is not of type str.' % v,
 - TypeError: super(type, obj): obj must be an instance or subtype of type
-- "HTTP/1.1 GET /service-worker.js" - 404 Not Found
 - Deploy
