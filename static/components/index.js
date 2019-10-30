@@ -63,7 +63,7 @@ new Vue({
 			this.$notify({
 				title: '消息',
 				message: '制作中......',
-				type: 'warning'
+				type: 'info'
 			});
 		}
 	}
