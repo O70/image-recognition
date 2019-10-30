@@ -10,6 +10,11 @@ new Vue({
 			selected: '0'
 		};
 	},
+	watch: {
+		selected() {
+			(this.selected === '0') && this.getList();
+		}
+	},
 	created() {
 		axios.get('/labels').then(({ data = [] }) => {
 			this.labels = data;
@@ -17,13 +22,16 @@ new Vue({
 			console.error('got labels error: ', res);
 		});
 
-		axios.get('/list').then(({ data = [] }) => {
-			this.historys = data;
-		}).catch(res => {
-			console.error('got error: ' + res);
-		});
+		this.getList();
 	},
 	methods: {
+		getList() {
+			axios.get('/list').then(({ data = [] }) => {
+				this.historys = data;
+			}).catch(res => {
+				console.error('got error: ' + res);
+			});
+		},
 		findLabel(val) {
 			let res = {};
 			this.labels.forEach(it => {
@@ -49,6 +57,13 @@ new Vue({
 				Vue.set(pred, 'describe', lab.describe);
 			}).catch(res => {
 				console.error('update category error: ', res);
+			});
+		},
+		handleDownload() {
+			this.$notify({
+				title: '消息',
+				message: '制作中......',
+				type: 'warning'
 			});
 		}
 	}
