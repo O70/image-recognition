@@ -1,34 +1,14 @@
 new Vue({
 	el: '#app-container',
 	data() {
-		const cols = 4;
-		const hcols = 2;
 		return {
 			metadatas: [],
-			grids: {
-				rows: 0, 
-				cols,
-				span: 24 / cols
-			},
-			hgrids: {
-				rows: 0, 
-				cols,
-				span: 24 / hcols
-			},
+			historys: [],
 			categorys: [],
 			labels: [],
 			drawer: false,
-			historys: [],
 			selected: '0'
 		};
-	},
-	watch: {
-		metadatas() {
-			this.grids.rows = Math.ceil(this.metadatas.length / this.grids.cols);
-		},
-		historys() {
-			this.hgrids.rows = Math.ceil(this.historys.length / this.hgrids.cols);
-		}
 	},
 	created() {
 		axios.get('/labels').then(({ data = [] }) => {
@@ -44,12 +24,6 @@ new Vue({
 		});
 	},
 	methods: {
-		getItem(r, c) {
-			return this.metadatas[r * this.grids.cols + c];
-		},
-		getHistoryItem(r, c) {
-			return this.historys[r * this.hgrids.cols + c];
-		},
 		findLabel(val) {
 			let res = {};
 			this.labels.forEach(it => {

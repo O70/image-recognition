@@ -39,9 +39,11 @@
 								<button class="btn btn-lg btn-info" @click="drawer = true">
 									<span class="icon-upload mr-1"></span> 上  传
 								</button>
-								<!-- <button class="btn btn-lg btn-success">
+								<button class="btn btn-lg btn-success" 
+									:disabled="selected === '0'"
+									@click="selected = '0'">
 									<span class="icon-image mr-1"></span> 浏  览
-								</button> -->
+								</button>
 								<button class="btn btn-lg btn-warning" onclick="alert('TODO...')">
 									<span class="icon-download mr-1"></span> 下  载
 								</button>
@@ -51,18 +53,21 @@
 				</div>
 				<div>
 					<el-tabs v-model="selected" type="border-card">
-						<el-tab-pane>
+						<el-tab-pane lazy>
 							<span slot="label">
 								<i class="icon-image"></i> 已识别记录
 							</span>
 							<div class="row">
-								<div class="col-lg-6" v-for="item in historys" :key="item.id">
+								<div 
+									class="col-lg-6" 
+									v-for="(item, ind) in historys" 
+									:key="item.id">
 									<div class="row ml-1 mr-1">
 										<div class="col-lg-6 text-center p-0">
 											<el-image 
 												:src="item.filepath"
 												fit="cover"
-												lazy
+												:lazy="ind > 10"
 												:preview-src-list="[item.filepath]"
 												class="ipre"></el-image>
 										</div>
@@ -75,81 +80,74 @@
 								</div>
 							</div>
 						</el-tab-pane>
-						<el-tab-pane>
+						<el-tab-pane lazy>
 							<span slot="label">
 								<i class="icon-image"></i> 人工鉴定记录
 							</span>
 						</el-tab-pane>
-						<el-tab-pane>
+						<el-tab-pane lazy>
 							<span slot="label">
 								<i class="icon-image"></i> 未能识别记录
 							</span>
 						</el-tab-pane>
-						<el-tab-pane>
+						<el-tab-pane lazy>
 							<span slot="label">
-								<i class="icon-image"></i> 当前记录
+								<i class="icon-image"></i> 当前上传记录
 							</span>
-							<div>
-								<el-row 
-									v-for="(rv, rind) in grids.rows" 
-									:key="rv" 
-									:gutter="5"
-									class="mar-b">
-									<el-col v-for="(cv, cind) in grids.cols" :key="rv + '-' + cv" :span="grids.span">
-										<el-card 
-											v-if="rind * grids.cols + cind < metadatas.length" 
-											:body-style="{ padding: '5px' }">
+							<div class="row">
+								<div 
+									class="col-lg-6" 
+									v-for="(item, ind) in metadatas"
+									:key="item.filepath">
+									<div class="row ml-1 mr-1">
+										<div class="col-lg-6 text-center p-0">
 											<el-image 
-												:src="getItem(rind, cind).filepath"
+												:src="item.filepath"
 												fit="cover"
-												lazy
-												:preview-src-list="[getItem(rind, cind).filepath]"
-												class="image-preview"></el-image>
-											<el-row 
-												v-for="(pred, pind) in getItem(rind, cind).predicts"
-												:key="rv + '-' + cv + '-' + pind"
-												:gutter="20"
-												:class="{ 'mar-t': pind > 0 }">
-												<el-col :span="24" align="center">
-													<el-tag :type="getItem(rind, cind).id && 
-														pind === 0 ? 'success' : 'danger'">
-														{{ pred.predict }} 
+												:lazy="ind > 10"
+												:preview-src-list="[item.filepath]"
+												class="ipre"></el-image>
+										</div>
+										<div class="col-lg-6 pr-0">
+											<div 
+												v-for="(pred, pind) in item.predicts" 
+												class="mb-2">
+												<el-tag :type="item.id && pind === 0 ? 'success' : 'danger'">
+													{{ pred.predict }} 
+												</el-tag>
+												<el-tooltip 
+													:content="pred.describe"
+													placement="top">
+													<el-tag :type="item.id && pind === 0 ? 'success' : 'danger'">
+														{{ pred.label }}
 													</el-tag>
-													<el-tooltip 
-														:content="pred.describe"
-														placement="top">
-														<el-tag :type="getItem(rind, cind).id && 
-															pind === 0 ? 'success' : 'danger'">
-															{{ pred.label }}
-														</el-tag>
-													</el-tooltip>
-													<el-popover
-														v-if="getItem(rind, cind).id && pind === 0"
-														placement="right">
-														<el-select 
-													    	v-model="pred.category"
-													    	@change="handleChange(\$event, getItem(rind, cind), pred)">
-															<el-option-group
-																v-for="group in labels"
-																:key="group.label"
-																:label="group.label">
-															<el-option
-																v-for="item in group.children"
-																:key="item.value"
-																:label="item.label"
-																:value="item.value">
-																<span style="float: left">{{ item.label }}</span>
-				      											<span style="float: right; color: #8492a6; font-size: 13px;max-width: 300px;">{{ item.describe }}</span>
-															</el-option>
-															</el-option-group>
-														</el-select>
-														<i class="el-icon-edit" slot="reference"></i>
-													</el-popover>
-												</el-col>
-											</el-row>
-										</el-card>
-									</el-col>
-								</el-row>
+												</el-tooltip>
+												<el-popover
+													v-if="item.id && pind === 0"
+													placement="right">
+													<el-select 
+												    	v-model="pred.category"
+												    	@change="handleChange(\$event, item, pred)">
+														<el-option-group
+															v-for="group in labels"
+															:key="group.label"
+															:label="group.label">
+														<el-option
+															v-for="item in group.children"
+															:key="item.value"
+															:label="item.label"
+															:value="item.value">
+															<span style="float: left">{{ item.label }}</span>
+			      											<span style="float: right; color: #8492a6; font-size: 13px;max-width: 300px;">{{ item.describe }}</span>
+														</el-option>
+														</el-option-group>
+													</el-select>
+													<i class="el-icon-edit" slot="reference"></i>
+												</el-popover>
+											</div>
+										</div>
+									</div>
+								</div>
 							</div>
 						</el-tab-pane>
 					</el-tabs>
