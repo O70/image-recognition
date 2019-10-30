@@ -23,7 +23,7 @@ create table tbl_image_metadata (
 
 ## Attentions
 
-`.pb`文件过大, 已被清除.
+- `.pb`文件过大, 已被清除.
 
 ``` sh
 $ git filter-branch --index-filter 'git rm --cached --ignore-unmatch static/yolov3_yanxin1000_1016.pb'
@@ -35,12 +35,11 @@ $ git gc --aggressive --prune=now
 $ git push --force origin master
 ```
 
+- Deprecated: `Browse`
+
 ## TODO
 
-- `rm src/test.py`
-- Loading...
 - Image size: x*y
-- 304 Not Modified
 - RuntimeError('generator raised StopIteration') 
 - remove https://unpkg.com
 - TypeError: WSGI response header value 469 is not of type str.
