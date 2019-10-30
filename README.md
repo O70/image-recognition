@@ -40,7 +40,6 @@ $ git push --force origin master
 ## TODO
 
 - Image size: x*y
-- remove https://unpkg.com
 - RuntimeError('generator raised StopIteration') 
 - TypeError: WSGI response header value 469 is not of type str.
 - 'WSGI response header value %r is not of type str.' % v,
