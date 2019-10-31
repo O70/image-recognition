@@ -4,7 +4,7 @@ JDBCS = {
 	'dbn': 'mysql',
 	'user': 'root',
 	'pw': 'mysql',
-	'db': 'riped-config',
+	'db': 'irdb',
     'host': 'localhost'
 }
 
