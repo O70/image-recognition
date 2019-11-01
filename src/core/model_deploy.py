@@ -136,8 +136,13 @@ def test(test_loader, model):
                 smax_out = smax(y_pred)
 
                 #
-                max_index = list(map(list(smax_out[0]).index, nlargest(3, smax_out[0])))
-                max_num = nlargest(3, smax_out[0].cpu().numpy())
+                size = 3
+                max_index = list(map(list(smax_out[0]).index, nlargest(size, smax_out[0])))
+                max_num = nlargest(size, smax_out[0].cpu().numpy())
+                print('******************')
+                for ind in range(size):
+                    print(max_index[ind], cget_keys(dicts, max_index[ind]), round(max_num[ind], 6))
+                print('******************')
                 print("predict: ")
                 #  class: get_keys(dicts, max_index[0])[0,1,2]
                 #  degree of confidence: max_num[0,1,2]
