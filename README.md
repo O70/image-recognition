@@ -10,7 +10,7 @@ create table tbl_image_metadata (
     id varchar(36) not null primary key,
     filename varchar(64),
     filepath varchar(128),
-    predict double(10, 6),
+    predict double(10, 8),
     category int,
     create_date datetime
 );
@@ -24,6 +24,8 @@ create table tbl_image_metadata (
 $ pip install web.py==0.40
 $ pip install pillow
 $ pip install pymysql
+
+$ pip install numpy opencv-python torch pandas tqdm albumentations torchvision
 ```
 
 ``` sh

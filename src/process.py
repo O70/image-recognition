@@ -7,6 +7,7 @@ class Process(object):
 	def __init__(self):
 		super(Process, self).__init__()
 
+	# Mock
 	def run(self, imgpath):
 		print('Start processing images: ' + imgpath)
 

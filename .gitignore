@@ -6,3 +6,4 @@ repos/
 .pb
 test.*
 *_bak*
+*.pth.tar
