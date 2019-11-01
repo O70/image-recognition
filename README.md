@@ -1,11 +1,11 @@
 # Image Recognition
 
-## Table
+## Database
 
 ``` sql
 create database if not exists irdb default charset utf8 collate utf8_general_ci;
 
-drop table tbl_image_metadata;
+drop table if exists tbl_image_metadata;
 create table tbl_image_metadata (
     id varchar(36) not null primary key,
     filename varchar(64),
