@@ -141,7 +141,7 @@ def test(test_loader, model):
                 max_num = nlargest(size, smax_out[0].cpu().numpy())
                 print('******************')
                 for ind in range(size):
-                    print(max_index[ind], cget_keys(dicts, max_index[ind]), round(max_num[ind], 6))
+                    print(max_index[ind], get_keys(dicts, max_index[ind]), round(max_num[ind], 6))
                 print('******************')
                 print("predict: ")
                 #  class: get_keys(dicts, max_index[0])[0,1,2]
@@ -157,16 +157,22 @@ def test(test_loader, model):
                 print("\t", round(max_num[2], 6) * 100, "%")
                 print("\n")
 
+def recognition(imgpath):
+    model = get_net()
+    pretrain = torch.load('./_checkpoint.pth.tar', map_location = 'cpu')
+    model.load_state_dict(pretrain['state_dict'])
+    pass
 
 
 if __name__ == "__main__":
-    model = get_net()
-    test_files = get_files("./test/", "test")
-    # load test set
-    test_dataloader = DataLoader(LuoluDataset(test_files, test=True), batch_size=1, shuffle=False, pin_memory=False)
-    # load trained model
-    # deploy cpu
-    pretrain = torch.load("./_checkpoint.pth.tar", map_location="cpu")
-    # model = nn.DataParallel(model)
-    model.load_state_dict(pretrain["state_dict"])
-    test(test_dataloader, model)
+    # model = get_net()
+    # test_files = get_files("./test/", "test")
+    # # load test set
+    # test_dataloader = DataLoader(LuoluDataset(test_files, test=True), batch_size=1, shuffle=False, pin_memory=False)
+    # # load trained model
+    # # deploy cpu
+    # pretrain = torch.load("./_checkpoint.pth.tar", map_location="cpu")
+    # # model = nn.DataParallel(model)
+    # model.load_state_dict(pretrain["state_dict"])
+    # test(test_dataloader, model)
+    recognition('')
