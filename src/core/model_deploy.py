@@ -18,7 +18,7 @@ from torch.autograd import Variable
 from torch.utils.data import DataLoader
 from tqdm import tqdm
 import albumentations as A
-from model import get_net
+from core.model import get_net
 from albumentations.pytorch import ToTensor
 from albumentations.augmentations.transforms import CenterCrop
 from itertools import chain
@@ -26,6 +26,44 @@ from collections import OrderedDict
 
 dicts = {"W": 0, "P": 1, "Cg": 2,
          "S": 3, "H": 4, "rubbled": 5}
+# dicts = {
+#     'Cg/Cgm': 0,
+#     'Cg/Cgc': 1,
+#     'S/Sgx': 2,
+#     'S/Spl': 3,
+#     'S/Sm': 4,
+#     'S/Smb': 5,
+#     'S/Sx': 6,
+#     'S/Sl': 7,
+#     'S/Sr': 8,
+#     'S/Sd': 9,
+#     'S/Sdw': 10,
+#     'S/Sds': 11,
+#     'S/Sdi1(Sdi2)': 12,
+#     'S/Si': 13,
+#     'S/Sb': 14,
+#     'SA/SAm(SAx)': 15,
+#     'H/Hs': 16,
+#     'H/Hm': 17,
+#     'MS/Mm': 18,
+#     'MS/Ml': 19,
+#     'MS/Mb': 20,
+#     'MS/Md': 21,
+#     'MS/Mc': 22,
+#     'C/C': 23,
+#     'MT/M': 24,
+#     'MR/MR': 25,
+#     'W/W': 26,
+#     'WP/WP': 27,
+#     'P/P': 28,
+#     'PG/PG': 29,
+#     'G/G': 30,
+#     'F/F': 31,
+#     'R/R': 32,
+#     'B/B': 33,
+#     'Br/Br': 34,
+#     'rubbled/rubbled': 35
+# }
 # W: 379
 # P: 274
 # PG: 95
@@ -121,12 +159,14 @@ def test(test_loader, model):
     tta = False
     global predict
     global labels
+    results = []
     for i, (input, filepath) in enumerate(tqdm(test_loader)):
         filepath = [os.path.basename(x) for x in filepath]
         with torch.no_grad():
             image_var = Variable(input)
             # print('filepath: ', filepath)
-            class_label = str(filepath).split('_')[0]  # 提取类别信息
+            print(str(filepath).split('_'))
+            class_label = str(filepath).split('_')[1]  # 提取类别信息
             print('True label: ', class_label.split("'")[-1])
             labels.append(dicts[class_label.split("'")[-1]])
             # print(input,input.shape)
@@ -135,14 +175,9 @@ def test(test_loader, model):
                 smax = nn.Softmax(1)
                 smax_out = smax(y_pred)
 
-                #
                 size = 3
                 max_index = list(map(list(smax_out[0]).index, nlargest(size, smax_out[0])))
                 max_num = nlargest(size, smax_out[0].cpu().numpy())
-                print('******************')
-                for ind in range(size):
-                    print(max_index[ind], get_keys(dicts, max_index[ind]), round(max_num[ind], 6))
-                print('******************')
                 print("predict: ")
                 #  class: get_keys(dicts, max_index[0])[0,1,2]
                 #  degree of confidence: max_num[0,1,2]
@@ -157,22 +192,38 @@ def test(test_loader, model):
                 print("\t", round(max_num[2], 6) * 100, "%")
                 print("\n")
 
-def recognition(imgpath):
-    model = get_net()
-    pretrain = torch.load('./_checkpoint.pth.tar', map_location = 'cpu')
-    model.load_state_dict(pretrain['state_dict'])
-    pass
+                print('******************')
+                for ind in range(size):
+                    # print(type(max_num[ind]), max_num[ind], type(max_num[ind].item()), max_num[ind].item(), round(max_num[ind].item(), 6), type(round(max_num[ind].item(), 6)))
+                    results.append({ 'predict': round(max_num[ind].item(), 6), 'category': max_index[ind] })
+                print(results)
+                for x in results:
+                    print(type(x['predict']))
+                print('******************')
+    return results
 
+def recognition(imgpath):
+    if not os.path.exists(imgpath):
+        return []
+
+    files = pd.DataFrame({ 'filename': [imgpath]})
+    dataloader = DataLoader(LuoluDataset(files, test=True), batch_size=1, shuffle=False, pin_memory=False)
+
+    model = get_net()
+    pretrain = torch.load('./src/core/_checkpoint.pth.tar', map_location = 'cpu')
+    model.load_state_dict(pretrain['state_dict'])
+
+    return test(dataloader, model)
 
 if __name__ == "__main__":
-    # model = get_net()
-    # test_files = get_files("./test/", "test")
-    # # load test set
-    # test_dataloader = DataLoader(LuoluDataset(test_files, test=True), batch_size=1, shuffle=False, pin_memory=False)
-    # # load trained model
-    # # deploy cpu
-    # pretrain = torch.load("./_checkpoint.pth.tar", map_location="cpu")
-    # # model = nn.DataParallel(model)
-    # model.load_state_dict(pretrain["state_dict"])
-    # test(test_dataloader, model)
-    recognition('')
+    model = get_net()
+    test_files = get_files("./test/", "test")
+
+    # load test set
+    test_dataloader = DataLoader(LuoluDataset(test_files, test=True), batch_size=1, shuffle=False, pin_memory=False)
+    # load trained model
+    # deploy cpu
+    pretrain = torch.load("./_checkpoint.pth.tar", map_location="cpu")
+    # model = nn.DataParallel(model)
+    model.load_state_dict(pretrain["state_dict"])
+    test(test_dataloader, model)

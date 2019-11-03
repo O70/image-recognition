@@ -2,7 +2,7 @@
 
 import random
 
-from core.model import get_net
+from core.model_deploy import recognition
 
 class Process(object):
 	"""Use models to process images"""
@@ -23,7 +23,4 @@ class Process(object):
 		return sorted(preds, key = lambda x:x['predict'], reverse = True)
 
 	def run(self, imgpath):
-		model = get_net()
-		print(model)
-
-Process().run('')
+		return recognition(imgpath)
