@@ -197,8 +197,6 @@ def test(test_loader, model):
                     # print(type(max_num[ind]), max_num[ind], type(max_num[ind].item()), max_num[ind].item(), round(max_num[ind].item(), 6), type(round(max_num[ind].item(), 6)))
                     results.append({ 'predict': round(max_num[ind].item(), 6), 'category': max_index[ind] })
                 print(results)
-                for x in results:
-                    print(type(x['predict']))
                 print('******************')
     return results
 
@@ -215,15 +213,15 @@ def recognition(imgpath):
 
     return test(dataloader, model)
 
-if __name__ == "__main__":
-    model = get_net()
-    test_files = get_files("./test/", "test")
+# if __name__ == "__main__":
+#     model = get_net()
+#     test_files = get_files("./test/", "test")
 
-    # load test set
-    test_dataloader = DataLoader(LuoluDataset(test_files, test=True), batch_size=1, shuffle=False, pin_memory=False)
-    # load trained model
-    # deploy cpu
-    pretrain = torch.load("./_checkpoint.pth.tar", map_location="cpu")
-    # model = nn.DataParallel(model)
-    model.load_state_dict(pretrain["state_dict"])
-    test(test_dataloader, model)
+#     # load test set
+#     test_dataloader = DataLoader(LuoluDataset(test_files, test=True), batch_size=1, shuffle=False, pin_memory=False)
+#     # load trained model
+#     # deploy cpu
+#     pretrain = torch.load("./_checkpoint.pth.tar", map_location="cpu")
+#     # model = nn.DataParallel(model)
+#     model.load_state_dict(pretrain["state_dict"])
+#     test(test_dataloader, model)

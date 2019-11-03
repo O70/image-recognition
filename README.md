@@ -18,6 +18,10 @@ create table tbl_image_metadata (
 
 数据库连接配置在`src/config.py`中.
 
+## About Model
+
+模型需要被存放至`src/core/`中, 详情请参考`src/core/model_deploy.py`中等`recognition`方法.
+
 ## Run
 
 ``` sh
